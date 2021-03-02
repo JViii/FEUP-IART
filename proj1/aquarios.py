@@ -1,7 +1,8 @@
 class Coord:
-  def __init__(x,y):
+  def __init__(self,x,y):
     self.x = x
     self.y = y
+    #self.full = 0
 
   def X():
     return self.x
@@ -31,7 +32,7 @@ aquarios = [aquario1,aquario2] #...
 
 
 def canFill(aquario,cell):
-  if(board[cell.y,cell.x]==1)
+  if(board[cell.y][cell.x]==1):
     return false
 
   line = board[cell.y]
@@ -44,17 +45,20 @@ def canFill(aquario,cell):
   
 def noAirBelow(aquario,cell):
   for c in aquario:
-    if(c.y<cell.y and board[c.y][c.x]==0)
+    if(c.y<cell.y and board[c.y][c.x]==0):
       return false
   
   return true
 
 def airOnSides(aquario,cell):
-  lista = [ c for ce in aquario if ce.x=cell.x]
-  for c in lista
-    
-  return lista
+  lista = [ c for ce in aquario if ce.x==cell.x]
+  line = board[cell.y]
+  col = board[cell.x]
 
+  if(line.count(1) + len(lista) >= maxWaterPerLine[cell.y]):
+    return false
+  else:
+    return lista
 
 
 def fill(x,y):
