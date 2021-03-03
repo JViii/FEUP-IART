@@ -46,7 +46,7 @@ def isObjective(node):
         if cap != colCap[i]:
             return False
 
-    return true
+    return True
 
 def bfs(initial_aquarium, rowCap, colCap, aquariums):
     currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap, aquariums))
