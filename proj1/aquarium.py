@@ -3,7 +3,7 @@ class Aquarium:
         self.pos = pos
     
     def findCell(self, cell):
-        for i in range(len(pos)):
-            if pos[i] == cell:
+        for i in range(len(self.pos)):
+            if self.pos[i] == cell:
                 return True
         return False

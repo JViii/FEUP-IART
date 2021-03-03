@@ -3,10 +3,9 @@ from state import State
 from utils import *
 
 class Fill:
-    def __init__(self, node, x, y):
+    def __init__(self, node, cell):
         self.node = node
-        self.x = x
-        self.y = y
+        self.cell = cell
 
     # def exceedRowCap():
 

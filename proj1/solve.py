@@ -2,7 +2,7 @@ from state import State
 from node import Node
 from fill import Fill
 from aquarium import Aquarium
-from coord import Coord
+from cell import Cell
 from utils import *
 
 def printAquarium(node):
@@ -76,11 +76,11 @@ def bfs(initial_aquarium, rowCap, colCap, aquariums):
 initialAquarium  = [[0] * 6] * 6
 
 # one example 6x6 easy
-aquariums1 = [Aquarium([Coord(0, 0), Coord(1, 0), Coord(0, 1), Coord(1, 1), Coord(2, 1), Coord(0, 2), Coord(1, 2), Coord(1, 3), Coord(2, 3), Coord(1, 4), Coord(2, 4)]),
-            Aquarium([Coord(2, 0), Coord(3, 0)]),
-            Aquarium([Coord(4, 0), Coord(4, 1)]),
-            Aquarium([Coord(5, 0), Coord(3, 1), Coord(5, 1), Coord(2, 2), Coord(3, 2), Coord(4, 2), Coord(5, 2), Coord(5, 3), Coord(5, 4)]),
-            Aquarium([Coord(0, 3), Coord(0, 4), Coord(0, 5), Coord(1, 5), Coord(2, 5)]),
-            Aquarium([Coord(3, 3), Coord(4, 3), Coord(3, 4), Coord(4, 4), Coord(5, 3), Coord(5, 4), Coord(5, 5)])]
+aquariums1 = [Aquarium([Cell(0, 0), Cell(1, 0), Cell(0, 1), Cell(1, 1), Cell(2, 1), Cell(0, 2), Cell(1, 2), Cell(1, 3), Cell(2, 3), Cell(1, 4), Cell(2, 4)]),
+            Aquarium([Cell(2, 0), Cell(3, 0)]),
+            Aquarium([Cell(4, 0), Cell(4, 1)]),
+            Aquarium([Cell(5, 0), Cell(3, 1), Cell(5, 1), Cell(2, 2), Cell(3, 2), Cell(4, 2), Cell(5, 2), Cell(5, 3), Cell(5, 4)]),
+            Aquarium([Cell(0, 3), Cell(0, 4), Cell(0, 5), Cell(1, 5), Cell(2, 5)]),
+            Aquarium([Cell(3, 3), Cell(4, 3), Cell(3, 4), Cell(4, 4), Cell(5, 3), Cell(5, 4), Cell(5, 5)])]
 rowCap1 = [3, 5, 5, 2, 5, 5]
 colCap1 = [5, 5, 4, 5, 3, 3]
