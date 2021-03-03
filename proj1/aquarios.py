@@ -1,29 +1,29 @@
-class Coord:
-  def __init__(self,x,y):
-    self.x = x
-    self.y = y
-    #self.full = 0
+# class Coord:
+#   def __init__(self,x,y):
+#     self.x = x
+#     self.y = y
+#     #self.full = 0
 
-  def X():
-    return self.x
+#   def X():
+#     return self.x
 
-  def Y():
-    return self.y
+#   def Y():
+#     return self.y
 
-  def __eq__(self,other):
-    return self.x == other.x and self.y == other.y
+#   def __eq__(self,other):
+#     return self.x == other.x and self.y == other.y
 
-board = [
-        [0,0,0,0,0,0],
-        [0,0,0,0,0,0],
-        [0,0,0,0,0,0],
-        [0,0,0,0,0,0],
-        [0,0,0,0,0,0],
-        [0,0,0,0,0,0]
-        ]
+# board = [
+#         [0,0,0,0,0,0],
+#         [0,0,0,0,0,0],
+#         [0,0,0,0,0,0],
+#         [0,0,0,0,0,0],
+#         [0,0,0,0,0,0],
+#         [0,0,0,0,0,0]
+#         ]
 
-maxWaterPerLine = [1,5,2,5,3,1]
-maxWaterPerCol = [4,3,3,2,2,3]
+# maxWaterPerLine = [1,5,2,5,3,1]
+# maxWaterPerCol = [4,3,3,2,2,3]
 
 aquario1 = [ Coord(0,5), Coord(1,5), Coord(2,5), Coord(3,5), Coord(4,5) ]
 aquario2 = [ Coord(5,0), Coord(5,4), Coord(4,4), Coord(3,4), Coord(5,3), Coord(5,2), Coord(4,2) ]
