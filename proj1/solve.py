@@ -84,3 +84,22 @@ aquariums1 = [Aquarium([Cell(0, 0), Cell(1, 0), Cell(0, 1), Cell(1, 1), Cell(2, 
             Aquarium([Cell(3, 3), Cell(4, 3), Cell(3, 4), Cell(4, 4), Cell(5, 3), Cell(5, 4), Cell(5, 5)])]
 rowCap1 = [3, 5, 5, 2, 5, 5]
 colCap1 = [5, 5, 4, 5, 3, 3]
+
+
+# -------------------------------
+# IDEA FOR STATE
+# -------------------------------
+
+#rowCap, colCap igual ao que se tem
+
+# isto representaria o aquario inicial
+# valores com o mesmo valor absoluto pertencem ao mesmo aquario
+# valores negativos significa que a celula esta vazia
+# valores positivos significa que a celula esta cheia
+
+# [[-1, -1, -1, -2, -2, -2],
+#  [-1, -3, -3, -2, -2, -4],
+#  [-1, -3, -3, -2, -2, -4],
+#  [-3, -3, -4, -4, -4, -4],
+#  [-3, -3, -3, -4, -5, -4],
+#  [-3, -3, -6, -6, -5, -4]]
