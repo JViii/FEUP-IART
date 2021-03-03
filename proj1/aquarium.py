@@ -26,6 +26,24 @@ def applyOperator(node, notExpanded):
             newNode = Fill(node, i, j)
             if newNode != -1: notExpanded.insert(0, newNode)
 
+def isObjective(node):
+    aquarium = node.state.aquarium
+
+    # verify if each row as reached the desired capacity
+    for i in range(6):
+        if rowCap[i] != aquarium[i].count(1):
+            return False
+    
+    # verify if each column as reached the desired capacity
+    for i in range(6):
+        cap = 0
+        for j in range(6):
+            cap += aquarium[j][i]
+        if cap != colCap[i]:
+            return False
+
+    return true
+
 def bfs(initial_aquarium, rowCap, colCap):
     currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
     finalNode = -1
@@ -51,16 +69,12 @@ def bfs(initial_aquarium, rowCap, colCap):
     else:
         printSequenceOfStates(finalNode)
 
-initialAquarium  = [[0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0]]
+initialAquarium  = [[0] * 6] * 6
 
 rowCap = [1, 5, 2, 5, 3, 1]
 colCap = [4, 3, 3, 2, 2, 3]
 
+print(initialAquarium)
 # initialState = State(aquarium, rowCap, colCap)
 # initialNode = Node(initialState)
 # newNode = Fill(initialNode, 1, 1).apply()
