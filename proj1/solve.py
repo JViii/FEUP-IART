@@ -3,7 +3,10 @@ from node import Node
 from fill import Fill
 from aquarium import Aquarium
 from cell import Cell
-from utils import *
+from utils import copy_list
+from priority_queue import PriorityQueue
+from myqueue import Queue
+from stack import Stack
 
 def printAquarium(node):
     aquarium = node.state.aquarium
@@ -26,7 +29,7 @@ def applyOperator(node, notExpanded):
     for i in range(5, -1, -1):
         for j in range(6):
             newNode = Fill(node, i, j)
-            if newNode != -1: notExpanded.insert(0, newNode)
+            if newNode != -1: notExpanded.push(newNode)
 
 def isObjective(node):
     aquarium = node.state.aquarium
@@ -52,7 +55,7 @@ def bfs(initial_aquarium, rowCap, colCap, aquariums):
     currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap, aquariums))
     finalNode = -1
 
-    notExpanded = [] # to change to a queue
+    notExpanded = Queue()
 
     while True:
         if isObjective(currNode):
@@ -63,10 +66,10 @@ def bfs(initial_aquarium, rowCap, colCap, aquariums):
         applyOperator(currNode, notExpanded)
 
         # selects next node to process
-        if len(notExpanded) == 0: # no more nodes to expand, no solution found
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
             break
         else:
-            currNode = notExpanded.pop(len(notExpanded) - 1)
+            currNode = notExpanded.pop()
 
     if finalNode == -1:
         print("There is no solution to this problem")
@@ -103,3 +106,5 @@ colCap1 = [5, 5, 4, 5, 3, 3]
 #  [-3, -3, -4, -4, -4, -4],
 #  [-3, -3, -3, -4, -5, -4],
 #  [-3, -3, -6, -6, -5, -4]]
+
+
