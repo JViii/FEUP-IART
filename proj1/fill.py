@@ -1,37 +1,79 @@
 from node import Node
 from state import State
-from utils import *
+from utils import copy_list
 
 class Fill:
-    def __init__(self, node, cell):
+    def __init__(self, node, x, y):
         self.node = node
-        self.cell = cell
-
-    # def exceedRowCap():
-
-    # def exceedColCap():
-
-    # def canFill(aquario,cell):
-    #     # the cell is laready filled
-    #     if(board[cell.y][cell.x] == 1):
-    #         return false
-
-    #     line = board[cell.y]
-    #     col = board[cell.x]
-
-    #     if(line.count(1) < maxWaterPerLine[cell.y] and col.count(1) < maxWaterPerCol[cell.x]):
-    #         return noAirBelow(cell)
-    #     else:
-    #         return false
+        self.aquarium = node.state.aquarium
+        self.rowCap = node.state.rowCap
+        self.colCap = node.state.colCap
+        self.x = x
+        self.y = y
+    
+    def getFullElemInCol(self, x):
+        col = []
+        for i in range(len(self.aquarium)):
+            if self.aquarium[i][x] > 0:
+                col.append(self.aquarium[i][x])
+            
+        return col
+    
+    def getFullElemInRow(self):
+        return [l for l in self.aquarium[self.y] if l > 0]
+    
+    def noAirBelow(self, cells):
+        if self.y == len(self.aquarium) - 1: 
+            return True
+        
+        id = abs(self.aquarium[self.y][self.x])
+        for x in cells:
+            val = self.aquarium[self.y + 1][x]
+            if abs(val) == id and val < 0:
+                return False
+            
+        return True
+    
+    def getSameAquariumXs(self):
+        line = self.aquarium[self.y]
+        id = abs(line[self.x])
+        ret = []
+        
+        for i in line:
+            if id == abs(i) and i < 0:
+                ret.append(i)
+                
+        return ret
+    
+    def exceedColsCap(self, cells):
+        for i in cells:
+            col = self.getFullElemInCol(i)
+            if len(col) + 1 > self.colCap[i]:
+                return True
+            
+        return False
+    
+    def exceedRowCap(self, cells):
+        return len(self.getFullElemInRow()) + len(cells) > self.rowCap[self.y]
 
     # Verifies if we can apply the operator
-    def preconditions(self):
-        return True
+    def preconditions(self, cells):
+        if (not self.exceedRowCap(cells)) and (not self.exceedColsCap(cells)): # capacities not exceded
+            return self.noAirBelow(cells)
+        else:
+          return False
+      
+    def fillCells(self, cells):
+        newAquarium = copy_list(self.node.state.aquarium)
+        
+        for i in cells:
+            newAquarium[self.y][i] = abs(newAquarium[self.y][i])
+            
+        return newAquarium
 
     def apply(self):
-        if not self.preconditions(): return -1
+        cells = self.getSameAquariumXs()
+        
+        if not self.preconditions(cells): return -1
 
-        newAquarium = copy_list(self.node.state.aquarium)
-        newAquarium[self.x][self.y] = 1
-        return Node(State(newAquarium, self.node.state.rowCap, self.node.state.colCap), self.node)
-        #return -1 # the operator was not applied
+        return Node(State(self.fillCells(cells), self.node.state.rowCap, self.node.state.colCap), self.node, self.node.depth + 1, self.node.cost + 1)

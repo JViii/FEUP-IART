@@ -8,6 +8,8 @@ from priority_queue import PriorityQueue
 from myqueue import Queue
 from stack import Stack
 
+from time import sleep
+
 def printAquarium(node):
     aquarium = node.state.aquarium
 
@@ -25,11 +27,17 @@ def printSequenceOfStates(node):
 
 def applyOperator(node, notExpanded):
     # To do: avoid repeated states maybe look to the siblings
-    # To generalize
-    for i in range(5, -1, -1):
-        for j in range(6):
-            newNode = Fill(node, i, j)
-            if newNode != -1: notExpanded.push(newNode)
+    aquarium = node.state.aquarium
+    for i in range(len(aquarium) - 1, -1, -1):
+        aux = []
+        for j in range(len(aquarium)):
+            sleep(1)
+            if not abs(aquarium[j][i]) in aux:
+                newNode = Fill(node, j, i).apply()
+                if newNode != -1: 
+                    printAquarium(node)
+                    aux.append(abs(aquarium[j][i]))
+                    notExpanded.push(newNode)
 
 def isObjective(node):
     aquarium = node.state.aquarium
@@ -37,22 +45,24 @@ def isObjective(node):
     colCap = node.state.colCap
 
     # verify if each row as reached the desired capacity
-    for i in range(6):
-        if rowCap[i] != aquarium[i].count(1):
+    for i in range(len(aquarium)):
+        usedCap = len([l for l in aquarium[i] if l > 0])
+        if rowCap[i] != usedCap:
             return False
     
     # verify if each column as reached the desired capacity
-    for i in range(6):
+    for i in range(len(aquarium)):
         cap = 0
-        for j in range(6):
-            cap += aquarium[j][i]
+        for j in range(len(aquarium)):
+            if aquarium[j][i] > 0:
+                cap += 1
         if cap != colCap[i]:
             return False
 
     return True
 
-def bfs(initial_aquarium, rowCap, colCap, aquariums):
-    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap, aquariums))
+def bfs(initial_aquarium, rowCap, colCap):
+    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
     finalNode = -1
 
     notExpanded = Queue()
@@ -76,17 +86,17 @@ def bfs(initial_aquarium, rowCap, colCap, aquariums):
     else:
         printSequenceOfStates(finalNode)
 
-initialAquarium  = [[0] * 6] * 6
-
 # one example 6x6 easy
-aquariums1 = [Aquarium([Cell(0, 0), Cell(1, 0), Cell(0, 1), Cell(1, 1), Cell(2, 1), Cell(0, 2), Cell(1, 2), Cell(1, 3), Cell(2, 3), Cell(1, 4), Cell(2, 4)]),
-            Aquarium([Cell(2, 0), Cell(3, 0)]),
-            Aquarium([Cell(4, 0), Cell(4, 1)]),
-            Aquarium([Cell(5, 0), Cell(3, 1), Cell(5, 1), Cell(2, 2), Cell(3, 2), Cell(4, 2), Cell(5, 2), Cell(5, 3), Cell(5, 4)]),
-            Aquarium([Cell(0, 3), Cell(0, 4), Cell(0, 5), Cell(1, 5), Cell(2, 5)]),
-            Aquarium([Cell(3, 3), Cell(4, 3), Cell(3, 4), Cell(4, 4), Cell(5, 3), Cell(5, 4), Cell(5, 5)])]
+initialAquarium = [[-1, -1, -1, -2, -2, -2],
+              [-1, -3, -3, -2, -2, -4],
+              [-1, -3, -3, -2, -2, -4],
+              [-3, -3, -4, -4, -4, -4],
+              [-3, -3, -3, -4, -5, -4],
+              [-3, -3, -6, -6, -5, -4]]
 rowCap1 = [3, 5, 5, 2, 5, 5]
 colCap1 = [5, 5, 4, 5, 3, 3]
+
+bfs(initialAquarium, rowCap1, colCap1)
 
 
 # -------------------------------
@@ -106,5 +116,6 @@ colCap1 = [5, 5, 4, 5, 3, 3]
 #  [-3, -3, -4, -4, -4, -4],
 #  [-3, -3, -3, -4, -5, -4],
 #  [-3, -3, -6, -6, -5, -4]]
+
 
 
