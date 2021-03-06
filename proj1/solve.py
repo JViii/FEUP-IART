@@ -1,8 +1,6 @@
 from state import State
 from node import Node
 from fill import Fill
-from aquarium import Aquarium
-from cell import Cell
 from utils import copy_list
 from priority_queue import PriorityQueue
 from myqueue import Queue
@@ -24,20 +22,19 @@ def printSequenceOfStates(node):
         printAquarium(node)
     else:
         printSequenceOfStates(node.parent)
+        printAquarium(node)
 
 def applyOperator(node, notExpanded):
     # To do: avoid repeated states maybe look to the siblings
     aquarium = node.state.aquarium
-    print("applyOperator")
+    aux = []
     for i in range(len(aquarium) - 1, -1, -1):
-        aux = []
         for j in range(len(aquarium)):
-            # sleep(1)
-            if not abs(aquarium[j][i]) in aux:
+            if not abs(aquarium[i][j]) in aux:
                 newNode = Fill(node, j, i).apply()
-                if newNode != -1: 
+                if newNode != -1:
                     printAquarium(newNode)
-                    aux.append(abs(aquarium[j][i]))
+                    aux.append(abs(aquarium[i][j]))
                     notExpanded.push(newNode)
 
 def isObjective(node):
@@ -69,6 +66,9 @@ def bfs(initial_aquarium, rowCap, colCap):
     notExpanded = Queue()
 
     while True:
+        print("INI")
+        printAquarium(currNode)
+        print("##################")
         if isObjective(currNode):
             finalNode = currNode
             break
@@ -81,11 +81,14 @@ def bfs(initial_aquarium, rowCap, colCap):
             break
         else:
             currNode = notExpanded.pop()
+            
+        print("##################")
+        # sleep(1)
 
     if finalNode == -1:
         print("There is no solution to this problem")
-    # else:
-    #     printSequenceOfStates(finalNode)
+    else:
+        printSequenceOfStates(finalNode)
 
 # one example 6x6 easy
 initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
@@ -103,26 +106,7 @@ initialAquarium2 = [[-2, -1, -1],
 rowCap2 = [2, 3, 3]
 colCap2 = [2, 3, 3]
 
-bfs(initialAquarium2, rowCap2, colCap2)
-
-
-# -------------------------------
-# IDEA FOR STATE
-# -------------------------------
-
-#rowCap, colCap igual ao que se tem
-
-# isto representaria o aquario inicial
-# valores com o mesmo valor absoluto pertencem ao mesmo aquario
-# valores negativos significa que a celula esta vazia
-# valores positivos significa que a celula esta cheia
-
-# [[-1, -1, -1, -2, -2, -2],
-#  [-1, -3, -3, -2, -2, -4],
-#  [-1, -3, -3, -2, -2, -4],
-#  [-3, -3, -4, -4, -4, -4],
-#  [-3, -3, -3, -4, -5, -4],
-#  [-3, -3, -6, -6, -5, -4]]
+bfs(initialAquarium1, rowCap1, colCap1)
 
 
 

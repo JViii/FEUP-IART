@@ -75,7 +75,8 @@ class Fill:
 
     def apply(self):
         cells = self.getSameAquariumXs()
+        # print(cells)
         
-        if not self.preconditions(cells): return -1
+        if len(cells) == 0 or not self.preconditions(cells): return -1
 
         return Node(State(self.fillCells(cells), self.node.state.rowCap, self.node.state.colCap), self.node, self.node.depth + 1, self.node.cost + 1)
