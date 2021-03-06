@@ -39,8 +39,8 @@ class Fill:
         id = abs(line[self.x])
         ret = []
         
-        for i in line:
-            if id == abs(i) and i < 0:
+        for i in range(len(line)):
+            if id == abs(line[i]) and line[i] < 0:
                 ret.append(i)
                 
         return ret
@@ -65,9 +65,11 @@ class Fill:
       
     def fillCells(self, cells):
         newAquarium = copy_list(self.node.state.aquarium)
-        
+
         for i in cells:
             newAquarium[self.y][i] = abs(newAquarium[self.y][i])
+            
+        # print(newAquarium)
             
         return newAquarium
 

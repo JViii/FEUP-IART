@@ -14,8 +14,8 @@ def printAquarium(node):
     aquarium = node.state.aquarium
 
     print("---------------------")
-    for i in range(0, 6):
-        for j in range(0, 6):
+    for i in range(len(aquarium)):
+        for j in range(len(aquarium)):
             print(aquarium[i][j], end = " ")
         print("")
 
@@ -28,14 +28,15 @@ def printSequenceOfStates(node):
 def applyOperator(node, notExpanded):
     # To do: avoid repeated states maybe look to the siblings
     aquarium = node.state.aquarium
+    print("applyOperator")
     for i in range(len(aquarium) - 1, -1, -1):
         aux = []
         for j in range(len(aquarium)):
-            sleep(1)
+            # sleep(1)
             if not abs(aquarium[j][i]) in aux:
                 newNode = Fill(node, j, i).apply()
                 if newNode != -1: 
-                    printAquarium(node)
+                    printAquarium(newNode)
                     aux.append(abs(aquarium[j][i]))
                     notExpanded.push(newNode)
 
@@ -83,20 +84,26 @@ def bfs(initial_aquarium, rowCap, colCap):
 
     if finalNode == -1:
         print("There is no solution to this problem")
-    else:
-        printSequenceOfStates(finalNode)
+    # else:
+    #     printSequenceOfStates(finalNode)
 
 # one example 6x6 easy
-initialAquarium = [[-1, -1, -1, -2, -2, -2],
-              [-1, -3, -3, -2, -2, -4],
-              [-1, -3, -3, -2, -2, -4],
-              [-3, -3, -4, -4, -4, -4],
-              [-3, -3, -3, -4, -5, -4],
-              [-3, -3, -6, -6, -5, -4]]
+initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
+                  [-1, -3, -3, -2, -2, -4],
+                  [-1, -3, -3, -2, -2, -4],
+                  [-3, -3, -4, -4, -4, -4],
+                  [-3, -3, -3, -4, -5, -4],
+                  [-3, -3, -6, -6, -5, -4]]
 rowCap1 = [3, 5, 5, 2, 5, 5]
 colCap1 = [5, 5, 4, 5, 3, 3]
 
-bfs(initialAquarium, rowCap1, colCap1)
+initialAquarium2 = [[-2, -1, -1],
+                  [-1, -1, -1],
+                  [-1, -1, -1]]
+rowCap2 = [2, 3, 3]
+colCap2 = [2, 3, 3]
+
+bfs(initialAquarium2, rowCap2, colCap2)
 
 
 # -------------------------------
