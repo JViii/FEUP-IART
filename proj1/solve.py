@@ -33,7 +33,7 @@ def applyOperator(node, notExpanded):
             if not abs(aquarium[i][j]) in aux:
                 newNode = Fill(node, j, i).apply()
                 if newNode != -1:
-                    printAquarium(newNode)
+                    # printAquarium(newNode)
                     aux.append(abs(aquarium[i][j]))
                     notExpanded.push(newNode)
 
@@ -65,10 +65,13 @@ def bfs(initial_aquarium, rowCap, colCap):
 
     notExpanded = Queue()
 
+    num = 1
     while True:
-        print("INI")
-        printAquarium(currNode)
-        print("##################")
+        print(num, end = " -> ")
+        print(currNode.depth)
+        # print("INI")
+        # printAquarium(currNode)
+        # print("##################")
         if isObjective(currNode):
             finalNode = currNode
             break
@@ -82,7 +85,42 @@ def bfs(initial_aquarium, rowCap, colCap):
         else:
             currNode = notExpanded.pop()
             
-        print("##################")
+        num += 1
+        # sleep(1)
+
+    if finalNode == -1:
+        print("There is no solution to this problem")
+    else:
+        printSequenceOfStates(finalNode)
+        
+        
+def dfs(initial_aquarium, rowCap, colCap):
+    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
+    finalNode = -1
+
+    notExpanded = Stack()
+
+    # num = 1
+    while True:
+        # print(num, end = " -> ")
+        # print(currNode.depth)
+        # print("INI")
+        # printAquarium(currNode)
+        # print("##################")
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        # apply operator
+        applyOperator(currNode, notExpanded)
+
+        # selects next node to process
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+            break
+        else:
+            currNode = notExpanded.pop()
+            
+        # num += 1
         # sleep(1)
 
     if finalNode == -1:
@@ -106,7 +144,8 @@ initialAquarium2 = [[-2, -1, -1],
 rowCap2 = [2, 3, 3]
 colCap2 = [2, 3, 3]
 
-bfs(initialAquarium1, rowCap1, colCap1)
+# bfs(initialAquarium1, rowCap1, colCap1)
+dfs(initialAquarium1, rowCap1, colCap1)
 
 
 
