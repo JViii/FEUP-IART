@@ -1,12 +1,12 @@
 from state import State
 from node import Node
 from fill import Fill
-from utils import copy_list
+from utils import *
 from priority_queue import PriorityQueue
 from myqueue import Queue
 from stack import Stack
 
-from time import sleep
+from time import *
 
 def printAquarium(node):
     aquarium = node.state.aquarium
@@ -23,19 +23,41 @@ def printSequenceOfStates(node):
     else:
         printSequenceOfStates(node.parent)
         printAquarium(node)
+        
+def isRepeated(node):
+    grandparent = node.parent.parent
+    parentIndex = node.parent.ind
+    
+    if grandparent == -1:
+        return False # it has no grandparent
+    
+    leftChildren = [l for l in grandparent.children if l.ind < parentIndex]
+    
+    for i in leftChildren:
+        cousins = i.children
+        for j in cousins:
+            if compare_lists(j.state.aquarium, node.state.aquarium):
+                return True
+            
+    return False
 
 def applyOperator(node, notExpanded):
     # To do: avoid repeated states maybe look to the siblings
     aquarium = node.state.aquarium
     aux = []
+    childrenNumber = 0
+
     for i in range(len(aquarium) - 1, -1, -1):
         for j in range(len(aquarium)):
             if not abs(aquarium[i][j]) in aux:
                 newNode = Fill(node, j, i).apply()
                 if newNode != -1:
-                    # printAquarium(newNode)
-                    aux.append(abs(aquarium[i][j]))
-                    notExpanded.push(newNode)
+                    newNode.setChildrenNumber(childrenNumber)
+                    if not isRepeated(newNode):
+                        aux.append(abs(aquarium[i][j]))
+                        node.addChildren(newNode)
+                        notExpanded.push(newNode)
+                        childrenNumber += 1
 
 def isObjective(node):
     aquarium = node.state.aquarium
@@ -65,13 +87,9 @@ def bfs(initial_aquarium, rowCap, colCap):
 
     notExpanded = Queue()
 
-    num = 1
+    start = time()
+
     while True:
-        print(num, end = " -> ")
-        print(currNode.depth)
-        # print("INI")
-        # printAquarium(currNode)
-        # print("##################")
         if isObjective(currNode):
             finalNode = currNode
             break
@@ -84,14 +102,17 @@ def bfs(initial_aquarium, rowCap, colCap):
             break
         else:
             currNode = notExpanded.pop()
-            
-        num += 1
-        # sleep(1)
+    
+    elapsed_time = time() - start
 
     if finalNode == -1:
         print("There is no solution to this problem")
     else:
         printSequenceOfStates(finalNode)
+        
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("BFS took: ", elapsed_time, "s")
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
         
         
 def dfs(initial_aquarium, rowCap, colCap):
@@ -100,13 +121,9 @@ def dfs(initial_aquarium, rowCap, colCap):
 
     notExpanded = Stack()
 
-    # num = 1
+    start = time()
+
     while True:
-        # print(num, end = " -> ")
-        # print(currNode.depth)
-        # print("INI")
-        # printAquarium(currNode)
-        # print("##################")
         if isObjective(currNode):
             finalNode = currNode
             break
@@ -119,14 +136,17 @@ def dfs(initial_aquarium, rowCap, colCap):
             break
         else:
             currNode = notExpanded.pop()
-            
-        # num += 1
-        # sleep(1)
+        
+    elapsed_time = time() - start
 
     if finalNode == -1:
         print("There is no solution to this problem")
     else:
         printSequenceOfStates(finalNode)
+        
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("DFS took: ", elapsed_time, "s")
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
 
 # one example 6x6 easy
 initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
@@ -144,7 +164,7 @@ initialAquarium2 = [[-2, -1, -1],
 rowCap2 = [2, 3, 3]
 colCap2 = [2, 3, 3]
 
-# bfs(initialAquarium1, rowCap1, colCap1)
+bfs(initialAquarium1, rowCap1, colCap1)
 dfs(initialAquarium1, rowCap1, colCap1)
 
 
