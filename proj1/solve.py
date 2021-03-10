@@ -148,6 +148,39 @@ def dfs(initial_aquarium, rowCap, colCap):
     print("DFS took: ", elapsed_time, "s")
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
 
+def ucs(initial_aquarium, rowCap, colCap):
+    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
+    finalNode = -1
+
+    notExpanded = PriorityQueue();
+
+    start = time();
+
+    while True:
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        # apply operator
+        applyOperator(currNode, notExpanded)
+
+        # selects next node to process
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+            break
+        else:
+            currNode = notExpanded.pop()
+    
+    elapsed_time = time() - start
+
+    if finalNode == -1:
+        print("There is no solution to this problem")
+    else:
+        printSequenceOfStates(finalNode)
+        
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("UCS took: ", elapsed_time, "s")
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+
 # one example 6x6 easy
 initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
                   [-1, -3, -3, -2, -2, -4],
@@ -164,8 +197,19 @@ initialAquarium2 = [[-2, -1, -1],
 rowCap2 = [2, 3, 3]
 colCap2 = [2, 3, 3]
 
-bfs(initialAquarium1, rowCap1, colCap1)
-dfs(initialAquarium1, rowCap1, colCap1)
+aq = [[-1,-5,-5,-6,-6,-6],
+      [-1,-5,-5,-6,-5,-5],
+      [-1,-1,-5,-5,-5,-5],
+      [-2,-1,-1,-3,-4,-5],
+      [-2,-2,-1,-3,-4,-5],
+      [-3,-3,-3,-3,-3,-5]]
+
+rowc = [3,2,2,4,5,5]
+colc = [5,4,3,4,4,1]
+
+#dfs(initialAquarium1, rowCap1, colCap1)
+#bfs(initialAquarium1, rowCap1, colCap1)
+ucs(initialAquarium1, rowCap1, colCap1)
 
 
 

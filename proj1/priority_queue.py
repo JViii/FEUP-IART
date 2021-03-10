@@ -22,14 +22,14 @@ class PriorityQueue:
         if j == -1:
             self.queue.insert(len(self.queue), node)
         else:
-            self.queue.insert(i, node)
+            self.queue.insert(j, node)
             
         
     def pop(self):
         if len(self.queue) == 0:
             return -1
         else:
-            return self.queue.pop(len(self.queue) - 1)
+            return self.queue.pop(-1) # last element
         
     def printQueue(self):
         print("Priority_Queue: ", end = " ")
