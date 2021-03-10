@@ -11,10 +11,10 @@ from time import *
 def printAquarium(node):
     aquarium = node.state.aquarium
 
-    print("---------------------")
+    print("-----------------")
     for i in range(len(aquarium)):
         for j in range(len(aquarium)):
-            print(aquarium[i][j], end = " ")
+            print("%2d" % (aquarium[i][j]), end = " ")
         print("")
 
 def printSequenceOfStates(node):
@@ -88,6 +88,8 @@ def bfs(initial_aquarium, rowCap, colCap):
     notExpanded = Queue()
 
     start = time()
+    
+    print("Solving using BFS...")
 
     while True:
         if isObjective(currNode):
@@ -110,7 +112,7 @@ def bfs(initial_aquarium, rowCap, colCap):
     else:
         printSequenceOfStates(finalNode)
         
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("BFS took: ", elapsed_time, "s")
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
         
@@ -122,6 +124,8 @@ def dfs(initial_aquarium, rowCap, colCap):
     notExpanded = Stack()
 
     start = time()
+    
+    print("\nSolving using DFS...")
 
     while True:
         if isObjective(currNode):
@@ -144,7 +148,7 @@ def dfs(initial_aquarium, rowCap, colCap):
     else:
         printSequenceOfStates(finalNode)
         
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("DFS took: ", elapsed_time, "s")
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
 
@@ -155,6 +159,8 @@ def ucs(initial_aquarium, rowCap, colCap):
     notExpanded = PriorityQueue();
 
     start = time();
+    
+    print("\nSolving using UCS...")
 
     while True:
         if isObjective(currNode):
@@ -177,7 +183,7 @@ def ucs(initial_aquarium, rowCap, colCap):
     else:
         printSequenceOfStates(finalNode)
         
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("UCS took: ", elapsed_time, "s")
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
 
@@ -197,18 +203,18 @@ initialAquarium2 = [[-2, -1, -1],
 rowCap2 = [2, 3, 3]
 colCap2 = [2, 3, 3]
 
-aq = [[-1,-5,-5,-6,-6,-6],
+initialAquarium3 = [[-1,-5,-5,-6,-6,-6],
       [-1,-5,-5,-6,-5,-5],
       [-1,-1,-5,-5,-5,-5],
       [-2,-1,-1,-3,-4,-5],
       [-2,-2,-1,-3,-4,-5],
       [-3,-3,-3,-3,-3,-5]]
 
-rowc = [3,2,2,4,5,5]
-colc = [5,4,3,4,4,1]
+rowCap3 = [3,2,2,4,5,5]
+colCap3 = [5,4,3,4,4,1]
 
-#dfs(initialAquarium1, rowCap1, colCap1)
-#bfs(initialAquarium1, rowCap1, colCap1)
+# bfs(initialAquarium1, rowCap1, colCap1)
+# dfs(initialAquarium1, rowCap1, colCap1)
 ucs(initialAquarium1, rowCap1, colCap1)
 
 
