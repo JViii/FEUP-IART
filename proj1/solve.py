@@ -113,7 +113,7 @@ def bfs(initial_aquarium, rowCap, colCap):
         printSequenceOfStates(finalNode)
         
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-    print("BFS took: ", elapsed_time, "s")
+    print("BFS took: %.6f s" % (elapsed_time))
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
         
         
@@ -149,7 +149,7 @@ def dfs(initial_aquarium, rowCap, colCap):
         printSequenceOfStates(finalNode)
         
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-    print("DFS took: ", elapsed_time, "s")
+    print("DFS took: %.6f s" % (elapsed_time))
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
 
 def ucs(initial_aquarium, rowCap, colCap):
@@ -184,7 +184,7 @@ def ucs(initial_aquarium, rowCap, colCap):
         printSequenceOfStates(finalNode)
         
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-    print("UCS took: ", elapsed_time, "s")
+    print("UCS took: %.6f s" % (elapsed_time))
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
 
 # one example 6x6 easy
@@ -213,8 +213,8 @@ initialAquarium3 = [[-1,-5,-5,-6,-6,-6],
 rowCap3 = [3,2,2,4,5,5]
 colCap3 = [5,4,3,4,4,1]
 
-# bfs(initialAquarium1, rowCap1, colCap1)
-# dfs(initialAquarium1, rowCap1, colCap1)
+bfs(initialAquarium1, rowCap1, colCap1)
+dfs(initialAquarium1, rowCap1, colCap1)
 ucs(initialAquarium1, rowCap1, colCap1)
 
 
