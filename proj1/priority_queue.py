@@ -9,27 +9,15 @@ class PriorityQueue:
         return len(self.queue) == 0
     
     def push(self, node):
-        if len(self.queue) == 0:
-            self.queue.insert(0, node)
-            return;
-        
-        j = -1
-        for i in range(len(self.queue)):
-            if node.cost >= self.queue[i].cost:
-                j = i
-                break
-            
-        if j == -1:
-            self.queue.insert(len(self.queue), node)
-        else:
-            self.queue.insert(j, node)
+        self.queue.append(node)
+        self.queue = sorted(self.queue,key=lambda node : node.cost)
             
         
     def pop(self):
         if len(self.queue) == 0:
             return -1
         else:
-            return self.queue.pop(-1) # last element
+            return self.queue.pop() # last element
         
     def printQueue(self):
         print("Priority_Queue: ", end = " ")

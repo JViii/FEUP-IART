@@ -197,12 +197,6 @@ initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
 rowCap1 = [3, 5, 5, 2, 5, 5]
 colCap1 = [5, 5, 4, 5, 3, 3]
 
-initialAquarium2 = [[-2, -1, -1],
-                  [-1, -1, -1],
-                  [-1, -1, -1]]
-rowCap2 = [2, 3, 3]
-colCap2 = [2, 3, 3]
-
 initialAquarium3 = [[-1,-5,-5,-6,-6,-6],
       [-1,-5,-5,-6,-5,-5],
       [-1,-1,-5,-5,-5,-5],
@@ -213,9 +207,9 @@ initialAquarium3 = [[-1,-5,-5,-6,-6,-6],
 rowCap3 = [3,2,2,4,5,5]
 colCap3 = [5,4,3,4,4,1]
 
-bfs(initialAquarium1, rowCap1, colCap1)
-dfs(initialAquarium1, rowCap1, colCap1)
-ucs(initialAquarium1, rowCap1, colCap1)
+#bfs(initialAquarium1, rowCap1, colCap1)
+#dfs(initialAquarium1, rowCap1, colCap1)
+ucs(initialAquarium3, rowCap3, colCap3)
 
 
 
