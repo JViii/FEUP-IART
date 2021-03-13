@@ -1,6 +1,7 @@
 from node import Node
 from state import State
 from utils import copy_list
+
 class Fill:
     def __init__(self, node, x, y):
         self.node = node
