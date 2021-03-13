@@ -44,20 +44,22 @@ class Fill:
                 
         return ret
     
-    def exceedColsCap(self, cells):
+    def canFillCol(self, cells):
+        # Makes sure column cap isn't exceeded
         for i in cells:
             col = self.getFullElemInCol(i)
             if len(col) + 1 > self.colCap[i]:
-                return True
+                return False
             
-        return False
+        return True
     
-    def exceedRowCap(self, cells):
-        return len(self.getFullElemInRow()) + len(cells) > self.rowCap[self.y]
+    def canFillRow(self, cells):
+        # Makes sure row cap isn't exceeded
+        return len(self.getFullElemInRow()) + len(cells) <= self.rowCap[self.y]
 
     # Verifies if we can apply the operator
     def preconditions(self, cells):
-        if (not self.exceedRowCap(cells)) and (not self.exceedColsCap(cells)): # capacities not exceded
+        if (self.canFillRow(cells)) and (self.canFillCol(cells)): # capacities not exceded
             return self.noAirBelow(cells)
         else:
           return False
