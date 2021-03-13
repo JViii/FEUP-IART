@@ -70,8 +70,6 @@ class Fill:
         for i in cells:
             newAquarium[self.y][i] = abs(newAquarium[self.y][i])
             
-        # print(newAquarium)
-            
         return newAquarium
 
     def apply(self):
