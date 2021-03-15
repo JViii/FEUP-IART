@@ -24,6 +24,18 @@ def printSequenceOfStates(node):
         printSequenceOfStates(node.parent)
         printAquarium(node)
         
+def printAlgorithmResults(algorithm, initial_time, final_node):
+    elapsed_time = time() - initial_time
+
+    if final_node == -1:
+        print("There is no solution to this problem")
+    else:
+        printSequenceOfStates(final_node)
+        
+    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("%s took: %.6f s" % (algorithm, elapsed_time))
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+        
 def isRepeated(node):
     grandparent = node.parent.parent
     parentIndex = node.parent.ind
@@ -41,11 +53,16 @@ def isRepeated(node):
             
     return False
 
-def applyOperator(node, notExpanded):
+def applyOperator(node, notExpanded, allowedDepth = -1):
     # To do: avoid repeated states maybe look to the siblings
     aquarium = node.state.aquarium
     aux = []
     childrenNumber = 0
+    
+    # Verifies if we reach the max depth
+    # Only used for iterative deepening search
+    if node.depth == allowedDepth:
+        return; 
 
     for i in range(len(aquarium) - 1, -1, -1):
         for j in range(len(aquarium)):
@@ -81,8 +98,14 @@ def isObjective(node):
 
     return True
 
-def bfs(initial_aquarium, rowCap, colCap):
-    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#           ALGORITHMS
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+# ---
+# Breadth First Search
+def bfs(initial_node):
+    currNode = initial_node
     finalNode = -1
 
     notExpanded = Queue()
@@ -105,20 +128,12 @@ def bfs(initial_aquarium, rowCap, colCap):
         else:
             currNode = notExpanded.pop()
     
-    elapsed_time = time() - start
-
-    if finalNode == -1:
-        print("There is no solution to this problem")
-    else:
-        printSequenceOfStates(finalNode)
+    printAlgorithmResults("BFS", start, finalNode)
         
-    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-    print("BFS took: %.6f s" % (elapsed_time))
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-        
-        
-def dfs(initial_aquarium, rowCap, colCap):
-    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
+# ---    
+# Depth First Search        
+def dfs(initial_node):
+    currNode = initial_node
     finalNode = -1
 
     notExpanded = Stack()
@@ -141,19 +156,12 @@ def dfs(initial_aquarium, rowCap, colCap):
         else:
             currNode = notExpanded.pop()
         
-    elapsed_time = time() - start
+    printAlgorithmResults("DFS", start, finalNode)
 
-    if finalNode == -1:
-        print("There is no solution to this problem")
-    else:
-        printSequenceOfStates(finalNode)
-        
-    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-    print("DFS took: %.6f s" % (elapsed_time))
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-
-def ucs(initial_aquarium, rowCap, colCap):
-    currNode = Node(State(copy_list(initial_aquarium), rowCap, colCap))
+# ---
+# Uniform Cost Search
+def ucs(initial_node):
+    currNode = initial_node
     finalNode = -1
 
     notExpanded = PriorityQueue();
@@ -176,40 +184,90 @@ def ucs(initial_aquarium, rowCap, colCap):
         else:
             currNode = notExpanded.pop()
     
-    elapsed_time = time() - start
+    printAlgorithmResults("UCS", start, finalNode) 
+    
+# ---
+# Iterative Deepening Search
+def its(initial_node):
+    currNode = initial_node
+    finalNode = -1
 
-    if finalNode == -1:
-        print("There is no solution to this problem")
-    else:
-        printSequenceOfStates(finalNode)
+    notExpanded = Stack();
+    depth = 0
+
+    start = time();
+    
+    print("\nSolving using ITS...")
+
+    while True:
         
-    print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-    print("UCS took: %.6f s" % (elapsed_time))
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+        print("Depth: %d" % (depth))
+        
+        while True:
+            if isObjective(currNode):
+                finalNode = currNode
+                break
+    
+            # apply operator
+            applyOperator(currNode, notExpanded, depth)
+    
+            # selects next node to process
+            if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+                break
+            else:
+                currNode = notExpanded.pop()
+                
+        if finalNode != -1:
+            break;
+            
+        currNode = initial_node # returns to initial node
+        depth += 1 # increases its depth
+    
+    printAlgorithmResults("ITS", start, finalNode)
+    
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#       AQUARIUM EXAMPLES
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-# one example 6x6 easy
+# ---
+# Ex1
 initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
-                  [-1, -3, -3, -2, -2, -4],
-                  [-1, -3, -3, -2, -2, -4],
-                  [-3, -3, -4, -4, -4, -4],
-                  [-3, -3, -3, -4, -5, -4],
-                  [-3, -3, -6, -6, -5, -4]]
+                    [-1, -3, -3, -2, -2, -4],
+                    [-1, -3, -3, -2, -2, -4],
+                    [-3, -3, -4, -4, -4, -4],
+                    [-3, -3, -3, -4, -5, -4],
+                    [-3, -3, -6, -6, -5, -4]]
+
 rowCap1 = [3, 5, 5, 2, 5, 5]
 colCap1 = [5, 5, 4, 5, 3, 3]
 
-initialAquarium3 = [[-1,-5,-5,-6,-6,-6],
-      [-1,-5,-5,-6,-5,-5],
-      [-1,-1,-5,-5,-5,-5],
-      [-2,-1,-1,-3,-4,-5],
-      [-2,-2,-1,-3,-4,-5],
-      [-3,-3,-3,-3,-3,-5]]
+# ---
+# Ex2
+initialAquarium2 = [[-1,-5,-5,-6,-6,-6],
+                    [-1,-5,-5,-6,-5,-5],
+                    [-1,-1,-5,-5,-5,-5],
+                    [-2,-1,-1,-3,-4,-5],
+                    [-2,-2,-1,-3,-4,-5],
+                    [-3,-3,-3,-3,-3,-5]]
 
-rowCap3 = [3,2,2,4,5,5]
-colCap3 = [5,4,3,4,4,1]
+rowCap2 = [3,2,2,4,5,5]
+colCap2 = [5,4,3,4,4,1]
 
-#bfs(initialAquarium1, rowCap1, colCap1)
-#dfs(initialAquarium1, rowCap1, colCap1)
-ucs(initialAquarium3, rowCap3, colCap3)
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#       BLIND ALGORITHMS
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+# Starting Node
+initial_node = Node(State(copy_list(initialAquarium1), rowCap1, colCap1))
+
+# bfs(initial_node)
+# dfs(initial_node)
+# ucs(initial_node)
+its(initial_node)
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#       HEURISTIC ALGORITHMS
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
