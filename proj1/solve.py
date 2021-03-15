@@ -1,10 +1,10 @@
-from state import State
-from node import Node
-from fill import Fill
-from utils import *
-from priority_queue import PriorityQueue
-from myqueue import Queue
-from stack import Stack
+from state.state import State
+from data_structures.node import Node
+from operators.fill import Fill
+from utils.utils import *
+from data_structures.priority_queue import PriorityQueue
+from data_structures.myqueue import Queue
+from data_structures.stack import Stack
 
 from time import *
 
