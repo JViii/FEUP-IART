@@ -8,6 +8,12 @@ from data_structures.stack import Stack
 
 from time import *
 
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#       PRINT FUNCTIONS
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+# ---
+# Prints the Aquarium
 def printAquarium(node):
     aquarium = node.state.aquarium
 
@@ -17,13 +23,16 @@ def printAquarium(node):
             print("%2d" % (aquarium[i][j]), end = " ")
         print("")
 
+# ---
+# Goes through all states and prints each one of them in order
 def printSequenceOfStates(node):
-    if node.parent == -1:
-        printAquarium(node)
-    else:
+    if node.parent != -1:
         printSequenceOfStates(node.parent)
-        printAquarium(node)
+    
+    printAquarium(node)
         
+# ---
+# Prints the algorithm results
 def printAlgorithmResults(algorithm, initial_time, final_node):
     elapsed_time = time() - initial_time
 
@@ -35,7 +44,16 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("%s took: %.6f s" % (algorithm, elapsed_time))
     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
-        
+    
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#     AUXILIAR FUNCTIONS
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+      
+# ---
+# Verifies if a state is repeated
+# A state can is repeated when:
+#   we have already fill a cell belonging to the same aquarium in the same iteration(verification done in applyOperator)
+#   we have a left cousin exatly with same aquarium cells filled
 def isRepeated(node):
     grandparent = node.parent.parent
     parentIndex = node.parent.ind
@@ -53,10 +71,11 @@ def isRepeated(node):
             
     return False
 
+# ---
+# Applies all the possible operators to the corresponding state
 def applyOperator(node, notExpanded, allowedDepth = -1):
-    # To do: avoid repeated states maybe look to the siblings
     aquarium = node.state.aquarium
-    aux = []
+    aquariumIndexes = [] # stores the aquarium indexes that the operator filled
     childrenNumber = 0
     
     # Verifies if we reach the max depth
@@ -66,16 +85,18 @@ def applyOperator(node, notExpanded, allowedDepth = -1):
 
     for i in range(len(aquarium) - 1, -1, -1):
         for j in range(len(aquarium)):
-            if not abs(aquarium[i][j]) in aux:
+            if not abs(aquarium[i][j]) in aquariumIndexes:
                 newNode = Fill(node, j, i).apply()
-                if newNode != -1:
-                    newNode.setChildrenNumber(childrenNumber)
+                if newNode != -1: # the apply operator generated a node
+                    newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
                     if not isRepeated(newNode):
-                        aux.append(abs(aquarium[i][j]))
+                        aquariumIndexes.append(abs(aquarium[i][j])) # adds the index of the aquarium
                         node.addChildren(newNode)
                         notExpanded.push(newNode)
                         childrenNumber += 1
 
+# ---
+# Tests if we have reached the objective state
 def isObjective(node):
     aquarium = node.state.aquarium
     rowCap = node.state.rowCap
@@ -220,7 +241,7 @@ def its(initial_node):
         if finalNode != -1:
             break;
             
-        currNode = initial_node # returns to initial node
+        currNode = Node(State(copy_list(initial_node.state.aquarium), rowCap1, colCap1)) # returns to initial node
         depth += 1 # increases its depth
     
     printAlgorithmResults("ITS", start, finalNode)
@@ -254,20 +275,24 @@ rowCap2 = [3,2,2,4,5,5]
 colCap2 = [5,4,3,4,4,1]
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-#       BLIND ALGORITHMS
+#          ALGORITHMS
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 # Starting Node
 initial_node = Node(State(copy_list(initialAquarium1), rowCap1, colCap1))
 
-# bfs(initial_node)
-# dfs(initial_node)
-# ucs(initial_node)
-its(initial_node)
+# ---
+# Blind Algorithms
 
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-#       HEURISTIC ALGORITHMS
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+# bfs(initial_node) # mais ou menos 19.4s
+# dfs(initial_node) # mais ou menos 0.001s
+# ucs(initial_node) # mais ou menos 0.001s
+# its(initial_node) # mais ou menos 16min
+
+# ---
+# Heuristic Algorithms
+
+
 
 
 
