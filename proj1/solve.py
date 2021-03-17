@@ -53,7 +53,7 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
 # Verifies if a state is repeated
 # A state can is repeated when:
 #   we have already fill a cell belonging to the same aquarium in the same iteration(verification done in applyOperator)
-#   we have a left cousin exatly with same aquarium cells filled
+#   we have cousins exatly with same aquarium cells filled
 def isRepeated(node):
     grandparent = node.parent.parent
     parentIndex = node.parent.ind
@@ -61,9 +61,9 @@ def isRepeated(node):
     if grandparent == -1:
         return False # it has no grandparent
     
-    leftChildren = [l for l in grandparent.children if l.ind < parentIndex]
+    children = [l for l in grandparent.children if l.ind != parentIndex]
     
-    for i in leftChildren:
+    for i in children:
         cousins = i.children
         for j in cousins:
             if compare_lists(j.state.aquarium, node.state.aquarium):
@@ -221,9 +221,6 @@ def its(initial_node):
     print("\nSolving using ITS...")
 
     while True:
-        
-        print("Depth: %d" % (depth))
-        
         while True:
             if isObjective(currNode):
                 finalNode = currNode
@@ -284,10 +281,10 @@ initial_node = Node(State(copy_list(initialAquarium1), rowCap1, colCap1))
 # ---
 # Blind Algorithms
 
-# bfs(initial_node) # mais ou menos 19.4s
-# dfs(initial_node) # mais ou menos 0.001s
-# ucs(initial_node) # mais ou menos 0.001s
-# its(initial_node) # mais ou menos 16min
+bfs(initial_node) # mais ou menos 20s
+dfs(initial_node) # mais ou menos 0.001s
+ucs(initial_node) # mais ou menos 0.002s
+its(initial_node) # mais ou menos 1min
 
 # ---
 # Heuristic Algorithms
