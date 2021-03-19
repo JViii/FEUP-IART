@@ -94,6 +94,20 @@ def applyOperator(node, notExpanded, allowedDepth = -1):
                         node.addChildren(newNode)
                         notExpanded.push(newNode)
                         childrenNumber += 1
+            
+# ---
+# Counts how many cells are filled in row
+def numCellsFilledInRow(aquarium, row):
+    return len([l for l in aquarium[row] if l > 0])
+
+# ---
+# Counts how many cells are filled in col
+def numCellsFilledInCol(aquarium, col):
+    ret = 0
+    for i in range(len(aquarium)):
+            if aquarium[i][col] > 0:
+                ret += 1
+    return ret
 
 # ---
 # Tests if we have reached the objective state
@@ -104,20 +118,28 @@ def isObjective(node):
 
     # verify if each row as reached the desired capacity
     for i in range(len(aquarium)):
-        usedCap = len([l for l in aquarium[i] if l > 0])
-        if rowCap[i] != usedCap:
-            return False
-    
-    # verify if each column as reached the desired capacity
-    for i in range(len(aquarium)):
-        cap = 0
-        for j in range(len(aquarium)):
-            if aquarium[j][i] > 0:
-                cap += 1
-        if cap != colCap[i]:
-            return False
+        if rowCap[i] != numCellsFilledInRow(aquarium, i) or colCap[i] != numCellsFilledInCol(aquarium, i):
+                return False
 
     return True
+
+# ---
+# Evaluates the current state
+# The lesser is the value the closer we are from a solution
+def evaluate(node):
+    aquarium = node.state.aquarium
+    rowCap = node.state.rowCap
+    colCap = node.state.colCap
+    
+    val = 0
+    
+    # goes through all rows and colls and counts how many cells we need to fill
+    # to complete the aquarium
+    for i in range(len(aquarium)):
+        val += rowCap[i] - numCellsFilledInRow(aquarium, i)
+        val += colCap[i] - numCellsFilledInCol(aquarium, i)
+        
+    return val
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #           ALGORITHMS
