@@ -264,6 +264,73 @@ def its(initial_node):
         depth += 1 # increases its depth
     
     printAlgorithmResults("ITS", start, finalNode)
+
+
+# ---
+# Greedy Search
+def greedy(initial_node):
+    currNode = initial_node
+    finalNode = -1
+
+    notExpanded = Queue()
+
+    start = time()
+    print("\nSolving using Greedy Search...")
+
+    #bfs code, change to Greedy-> Where to call heuristic function
+    while True:
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        #[TODO] change cost? 
+        currNode.cost=currNode.h()
+
+        # apply operator
+        applyOperator(currNode, notExpanded)
+
+        # selects next node to process
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+            break
+        else:
+            currNode = notExpanded.pop()
+    
+    printAlgorithmResults("Greedy", start, finalNode)    
+    
+
+
+# ---
+# A* 
+def aStar(initial_node):
+    currNode = initial_node
+    finalNode = -1
+
+    notExpanded = Queue()
+
+    start = time()
+    print("\nSolving using A*...")
+
+    #bfs code, change to A*
+    while True:
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        #[TODO] change cost? 
+        currNode.cost=currNode.cost+currNode.h()
+
+        # apply operator
+        applyOperator(currNode, notExpanded)
+
+        # selects next node to process
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+            break
+        else:
+            currNode = notExpanded.pop()
+    
+    printAlgorithmResults("A*", start, finalNode)    
+
+
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #       AQUARIUM EXAMPLES
@@ -308,9 +375,11 @@ dfs(initial_node) # mais ou menos 0.001s
 ucs(initial_node) # mais ou menos 0.002s
 its(initial_node) # mais ou menos 1min
 
+
 # ---
 # Heuristic Algorithms
-
+#greedy(initial_node) #
+#aStar(initial_node) # 
 
 
 
