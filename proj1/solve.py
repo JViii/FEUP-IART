@@ -8,6 +8,8 @@ from data_structures.stack import Stack
 
 from time import *
 
+import numbers
+
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #       PRINT FUNCTIONS
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -155,7 +157,7 @@ def bfs(initial_node):
 
     start = time()
     
-    print("Solving using BFS...")
+    print("\nSolving using BFS...")
 
     while True:
         if isObjective(currNode):
@@ -300,16 +302,82 @@ colCap2 = [5,4,3,4,4,1]
 # Starting Node
 initial_node = Node(State(copy_list(initialAquarium1), rowCap1, colCap1))
 
-# ---
-# Blind Algorithms
+# # ---
+# # Blind Algorithms
 
-bfs(initial_node) # mais ou menos 20s
-dfs(initial_node) # mais ou menos 0.001s
-ucs(initial_node) # mais ou menos 0.002s
-its(initial_node) # mais ou menos 1min
+# bfs(initial_node) # mais ou menos 20s
+# dfs(initial_node) # mais ou menos 0.001s
+# ucs(initial_node) # mais ou menos 0.002s
+# its(initial_node) # mais ou menos 1min
 
-# ---
-# Heuristic Algorithms
+# # ---
+# # Heuristic 
+
+def getOption(max):
+    option = input("Select an option: ")
+    while True:
+        try:
+            tmp = int(option)
+            if (tmp >= 0 and tmp <= max):
+                break
+            else:
+                option = input("Invalid Option! Select an option: ")
+        except:
+            option = input("Invalid Option! Select an option: ")
+        
+    return int(option)
+
+def humanMode():
+    print("TO DO")
+    
+def pcMode():
+    while True:
+        print("\n#########################")
+        print("     ALGORITHM MENU      ")
+        print("#########################")
+        
+        print("\n1) Breadth First Search")
+        print("2) Depth First Search")
+        print("3) Uniform Cost Search")
+        print("4) Iterative Deepening Search")
+        print("5) Greedy Search")
+        print("6) A Star")
+        print("7) Return")
+        print("0) Exit")
+        
+        option = getOption(7)
+        if option == 1: bfs(initial_node)
+        elif option == 2: dfs(initial_node)
+        elif option == 3: ucs(initial_node)
+        elif option == 4: its(initial_node)
+        elif option == 5: print("TO DO")
+        elif option == 6: print("TO DO")
+        elif option == 7: return 0
+        else: return -1
+
+def mainMenu():
+    while True:
+        print("#########################")
+        print("        MAIN MENU        ")
+        print("#########################")
+        
+        print("\n1) Human Mode")
+        print("2) PC Mode")
+        print("0) Exit")
+        
+        option = getOption(2)
+        if option == 1: humanMode()
+        elif option == 2:
+            if pcMode() == -1:
+                return;
+        else:
+            return;
+
+def game():
+    mainMenu()
+    
+game()
+        
 
 
 
