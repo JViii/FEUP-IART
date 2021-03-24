@@ -1,6 +1,7 @@
 from state.state import State
 from data_structures.node import Node
 from operators.fill import Fill
+from operators.unfill import Unfill
 from utils.utils import *
 from data_structures.priority_queue import PriorityQueue
 from data_structures.myqueue import Queue
@@ -412,11 +413,11 @@ def getOption(max):
     return int(option)
 
 def getAquarium(maxAquarium):
-    option = input("Select an aquarium(1-%d): " % (maxAquarium))
+    option = input("Select an aquarium(Fill: 1/%d)(Unfill: %d/-1)(Leave Game: 0): " % (maxAquarium, -maxAquarium))
     while True:
         try:
             tmp = int(option)
-            if (tmp >= 1 and tmp <= maxAquarium):
+            if (tmp >= -maxAquarium and tmp <= maxAquarium):
                 break
             else:
                 option = input("Invalid Option! Select an aquarium(1-%d): " % (maxAquarium))
@@ -442,13 +443,16 @@ def humanMode(initial_node):
 
         printAquarium(currNode)
         aquariumOption = getAquarium(nAquariums)
-        newAquarium = Fill(currNode, aquariumOption).apply()
+        if aquariumOption == 0: return
+        elif aquariumOption > 0: newAquarium = Fill(currNode, aquariumOption).apply()
+        else: newAquarium = Unfill(currNode, aquariumOption).apply()
         while newAquarium == -1:
-            print("\nIt is not possible to fill that aquarium!", end = "")
+            if aquariumOption > 0: print("\nIt is not possible to fill that aquarium!", end = "")
+            else: print("\nIt is not possible to unfill that aquarium!", end = "")
             aquariumOption = getAquarium(nAquariums)
-            newAquarium = Fill(currNode, aquariumOption).apply()
-            
-        # To implement UNFILL OPERATOR
+            if aquariumOption == 0: return
+            elif aquariumOption > 0: newAquarium = Fill(currNode, aquariumOption).apply()
+            else: newAquarium = Unfill(currNode, aquariumOption).apply()
 
         currNode = newAquarium
         
