@@ -411,8 +411,47 @@ def getOption(max):
         
     return int(option)
 
-def humanMode():
-    print("TO DO")
+def getAquarium(maxAquarium):
+    option = input("Select an aquarium(1-%d): " % (maxAquarium))
+    while True:
+        try:
+            tmp = int(option)
+            if (tmp >= 1 and tmp <= maxAquarium):
+                break
+            else:
+                option = input("Invalid Option! Select an aquarium(1-%d): " % (maxAquarium))
+        except:
+            option = input("Invalid Option! Select an aquarium(1-%d): " % (maxAquarium))
+        
+    return int(option)
+
+def humanMode(initial_node):
+    currNode = initial_node
+    finalNode = -1
+
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
+
+    print("\n&&&&&&&&&&&&&&&&&&&&&")
+    print("     LET'S PLAY")
+    print("&&&&&&&&&&&&&&&&&&&&&\n")
+
+    while True:
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        printAquarium(currNode)
+        aquariumOption = getAquarium(nAquariums)
+        newAquarium = Fill(currNode, aquariumOption).apply()
+        while newAquarium == -1:
+            print("\nIt is not possible to fill that aquarium!", end = "")
+            aquariumOption = getAquarium(nAquariums)
+            newAquarium = Fill(currNode, aquariumOption).apply()
+            
+        # To implement UNFILL OPERATOR
+
+        currNode = newAquarium
+        
     
 def pcMode():
     while True:
@@ -450,7 +489,7 @@ def mainMenu():
         print("0) Exit")
         
         option = getOption(2)
-        if option == 1: humanMode()
+        if option == 1: humanMode(initial_node)
         elif option == 2:
             if pcMode() == -1:
                 return;
