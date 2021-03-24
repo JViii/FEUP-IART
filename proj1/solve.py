@@ -281,6 +281,75 @@ def its(initial_node):
         depth += 1 # increases its depth
     
     printAlgorithmResults("ITS", start, finalNode)
+
+
+# ---
+# Greedy Search
+def greedy(initial_node):
+    currNode = initial_node
+    finalNode = -1
+
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
+
+    notExpanded = Queue()
+
+    start = time()
+    print("\nSolving using Greedy Search...")
+
+    while True:
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        #change cost
+        currNode.cost=currNode.h()
+
+        # apply operator
+        applyOperator(currNode, notExpanded,nAquariums)
+
+        # selects next node to process
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+            break
+        else:
+            currNode = notExpanded.pop()
+    
+    printAlgorithmResults("Greedy", start, finalNode)    
+    
+
+
+# ---
+# A* 
+def aStar(initial_node):
+    currNode = initial_node
+    finalNode = -1
+
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
+
+    notExpanded = Queue()
+
+    start = time()
+    print("\nSolving using A*...")
+
+    while True:
+        if isObjective(currNode):
+            finalNode = currNode
+            break
+
+        #change cost
+        currNode.cost=currNode.cost+currNode.h()
+
+        # apply operator
+        applyOperator(currNode, notExpanded, nAquariums)
+
+        # selects next node to process
+        if notExpanded.isEmpty(): # no more nodes to expand, no solution found
+            break
+        else:
+            currNode = notExpanded.pop()
+    
+    printAlgorithmResults("A*", start, finalNode)    
+
+
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #       AQUARIUM EXAMPLES
@@ -365,8 +434,8 @@ def pcMode():
         elif option == 2: dfs(initial_node)
         elif option == 3: ucs(initial_node)
         elif option == 4: its(initial_node)
-        elif option == 5: print("TO DO")
-        elif option == 6: print("TO DO")
+        elif option == 5: greedy(initial_node)
+        elif option == 6: aStar(initial_node)
         elif option == 7: return 0
         else: return -1
 

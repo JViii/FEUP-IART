@@ -13,3 +13,15 @@ class Node:
         
     def addChildren(self, children):
         self.children.insert(len(self.children) - 1, children)
+
+    def h(self):
+        heuristic=18
+        # Starting from bottom line
+        for line in range(len(self.state.aquarium) - 1, -1, -1):
+            filled=len([x for x in self.state.aquarium[line] if x>0])
+            if(filled == self.state.rowCap[line]):
+                heuristic-=3 # ou heuristic -=1
+            else:
+                break
+
+        return heuristic
