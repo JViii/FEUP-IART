@@ -75,9 +75,8 @@ def isRepeated(node):
 
 # ---
 # Applies all the possible operators to the corresponding state
-def applyOperator(node, notExpanded, allowedDepth = -1):
+def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
     aquarium = node.state.aquarium
-    aquariumIndexes = [] # stores the aquarium indexes that the operator filled
     childrenNumber = 0
     
     # Verifies if we reach the max depth
@@ -85,17 +84,26 @@ def applyOperator(node, notExpanded, allowedDepth = -1):
     if node.depth == allowedDepth:
         return; 
 
-    for i in range(len(aquarium) - 1, -1, -1):
-        for j in range(len(aquarium)):
-            if not abs(aquarium[i][j]) in aquariumIndexes:
-                newNode = Fill(node, j, i).apply()
-                if newNode != -1: # the apply operator generated a node
-                    newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
-                    if not isRepeated(newNode):
-                        aquariumIndexes.append(abs(aquarium[i][j])) # adds the index of the aquarium
-                        node.addChildren(newNode)
-                        notExpanded.push(newNode)
-                        childrenNumber += 1
+    for i in range(1,nAquariums+1):
+      newNode = Fill(node, i).apply()
+      if newNode != -1:
+        newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
+        if not isRepeated(newNode):
+          node.addChildren(newNode)
+          notExpanded.push(newNode)
+          childrenNumber += 1
+
+    #for i in range(len(aquarium) - 1, -1, -1):
+        #for j in range(len(aquarium)):
+            #if not abs(aquarium[i][j]) in aquariumIndexes:
+                #newNode = Fill(node, j, i).apply()
+                #if newNode != -1: # the apply operator generated a node
+                    #newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
+                    #if not isRepeated(newNode):
+                        #aquariumIndexes.append(abs(aquarium[i][j])) # adds the index of the aquarium
+                        #node.addChildren(newNode)
+                        #notExpanded.push(newNode)
+                        #childrenNumber += 1
             
 # ---
 # Counts how many cells are filled in row
@@ -152,6 +160,8 @@ def evaluate(node):
 def bfs(initial_node):
     currNode = initial_node
     finalNode = -1
+    
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
 
     notExpanded = Queue()
 
@@ -165,7 +175,7 @@ def bfs(initial_node):
             break
 
         # apply operator
-        applyOperator(currNode, notExpanded)
+        applyOperator(currNode, notExpanded, nAquariums)
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -181,6 +191,8 @@ def dfs(initial_node):
     currNode = initial_node
     finalNode = -1
 
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
+
     notExpanded = Stack()
 
     start = time()
@@ -193,7 +205,7 @@ def dfs(initial_node):
             break
 
         # apply operator
-        applyOperator(currNode, notExpanded)
+        applyOperator(currNode, notExpanded, nAquariums)
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -209,6 +221,8 @@ def ucs(initial_node):
     currNode = initial_node
     finalNode = -1
 
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
+
     notExpanded = PriorityQueue();
 
     start = time();
@@ -221,7 +235,7 @@ def ucs(initial_node):
             break
 
         # apply operator
-        applyOperator(currNode, notExpanded)
+        applyOperator(currNode, notExpanded, nAquariums)
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -237,6 +251,7 @@ def its(initial_node):
     currNode = initial_node
     finalNode = -1
 
+    nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
     notExpanded = Stack();
     depth = 0
 
@@ -251,7 +266,7 @@ def its(initial_node):
                 break
     
             # apply operator
-            applyOperator(currNode, notExpanded, depth)
+            applyOperator(currNode, notExpanded, nAquariums, depth)
     
             # selects next node to process
             if notExpanded.isEmpty(): # no more nodes to expand, no solution found

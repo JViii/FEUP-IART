@@ -3,13 +3,12 @@ from state.state import State
 from utils.utils import copy_list
 
 class Fill:
-    def __init__(self, node, x, y):
+    def __init__(self, node, aquariumID):
         self.node = node
         self.aquarium = node.state.aquarium
         self.rowCap = node.state.rowCap
         self.colCap = node.state.colCap
-        self.x = x
-        self.y = y
+        self.aquariumID = aquariumID
     
     def getFullElemInCol(self, x):
         col = []
@@ -19,62 +18,57 @@ class Fill:
             
         return col
     
-    def getFullElemInRow(self):
-        return [l for l in self.aquarium[self.y] if l > 0]
+    def getFullElemInRow(self, y):
+        return [l for l in self.aquarium[y] if l > 0]
     
-    def noAirBelow(self, cells):
-        if self.y == len(self.aquarium) - 1: 
-            return True
-        
-        id = abs(self.aquarium[self.y][self.x])
-        for x in cells:
-            val = self.aquarium[self.y + 1][x]
-            if abs(val) == id and val < 0:
-                return False
-            
-        return True
-    
-    def getSameAquariumXs(self):
-        line = self.aquarium[self.y]
-        id = abs(line[self.x])
-        ret = []
-        
-        for i in range(len(line)):
-            if id == abs(line[i]) and line[i] < 0:
-                ret.append(i)
-                
-        return ret
+    def getCellsToFill(self):
+        #line = self.aquarium[self.y]
+        aquarium = [] # [[x1,y1],[x2,y2]...]
+        cells = []
+
+        # Optimizations class with following attributes:
+        # CurrentWaterLevel - ultima linha que foi preenchida (-1 se está vazio)
+        # Max water level - linha mais a cima do aquario
+
+        for line in range(len(self.aquarium) - 1, -1, -1):
+          for col in range(len(self.aquarium)):
+            if self.aquarium[line][col] == -self.aquariumID: # only unfilled cells
+              aquarium.append([line,col])
+
+        if(aquarium != []):
+          maxval = max(aquarium,key=lambda x: x[0] )[0]
+          cells = [[y,x] for [y,x] in aquarium if y==maxval]
+
+        return cells
+
     
     def canFillCol(self, cells):
         # Makes sure column cap isn't exceeded
-        for i in cells:
-            col = self.getFullElemInCol(i)
-            if len(col) + 1 > self.colCap[i]:
+        for cell in cells:
+            col = self.getFullElemInCol(cell[1])
+            if len(col) + 1 > self.colCap[cell[1]]:
                 return False
             
         return True
     
     def canFillRow(self, cells):
         # Makes sure row cap isn't exceeded
-        return len(self.getFullElemInRow()) + len(cells) <= self.rowCap[self.y]
+        return len(self.getFullElemInRow(cells[0][0])) + len(cells) <= self.rowCap[cells[0][0]] #cells[0][0]=y
 
     # Verifies if we can apply the operator
     def preconditions(self, cells):
-        if (self.canFillRow(cells)) and (self.canFillCol(cells)): # capacities not exceded
-            return self.noAirBelow(cells)
-        else:
-          return False
+        return (self.canFillRow(cells)) and (self.canFillCol(cells)) # capacities not exceded
       
     def fillCells(self, cells):
         newAquarium = copy_list(self.node.state.aquarium)
 
-        for i in cells:
-            newAquarium[self.y][i] = abs(newAquarium[self.y][i])
+        for [y,x] in cells:
+            newAquarium[y][x] = self.aquariumID
             
         return newAquarium
 
     def apply(self):
-        cells = self.getSameAquariumXs()
+        cells = self.getCellsToFill()
         # print(cells)
         
         if len(cells) == 0 or not self.preconditions(cells): return -1
