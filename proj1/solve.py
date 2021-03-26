@@ -19,12 +19,18 @@ import numbers
 # Prints the Aquarium
 def printAquarium(node):
     aquarium = node.state.aquarium
+    rowCap = node.state.rowCap
+    colCap = node.state.colCap
 
-    print("-----------------")
+    print("\n\n-----------------")
     for i in range(len(aquarium)):
         for j in range(len(aquarium)):
             print("%2d" % (aquarium[i][j]), end = " ")
-        print("")
+        print("| %d" % (rowCap[i]))
+    
+    print("-----------------")
+    for i in range(len(aquarium)):
+         print("%2d" % (colCap[i]), end = " ")
 
 # ---
 # Goes through all states and prints each one of them in order
@@ -312,7 +318,7 @@ def greedy(initial_node):
 
 # ---
 # A* 
-def aStar(initial_node):
+def aStar(initial_node, human_mode = False):
     currNode = initial_node
     finalNode = -1
 
@@ -321,7 +327,7 @@ def aStar(initial_node):
     notExpanded = PriorityQueue("aStar")
 
     start = time()
-    print("\nSolving using A*...")
+    if not human_mode: print("\nSolving using A*...")
 
     while True:
         if isObjective(currNode):
@@ -342,7 +348,8 @@ def aStar(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    printAlgorithmResults("A*", start, finalNode)    
+    if not human_mode: printAlgorithmResults("A*", start, finalNode)   
+    else: return finalNode
 
 
     
@@ -407,8 +414,9 @@ def getOption(max):
     return int(option)
 
 def getAquarium(maxAquarium):
-    option = input("Select an aquarium(Fill: 1/%d)(Unfill: %d/-1)(Leave Game: 0): " % (maxAquarium, -maxAquarium))
+    option = input("\nSelect an aquarium(Fill: 1/%d)(Unfill: %d/-1)(Leave Game: 0)(?: Hint): " % (maxAquarium, -maxAquarium))
     while True:
+        if option == "?": return "?"
         try:
             tmp = int(option)
             if (tmp >= -maxAquarium and tmp <= maxAquarium):
@@ -420,9 +428,76 @@ def getAquarium(maxAquarium):
         
     return int(option)
 
+def numAquariumsFilled(result):
+    aquarium = result.state.aquarium
+    ret = [0] * len(aquarium)
+    
+    for i in range(len(aquarium)):
+        aq = []
+        for j in range(len(aquarium)):
+            if not (abs(aquarium[i][j]) in aq) and (aquarium[i][j] > 0):
+                aq.append(abs(aquarium[i][j]))
+                ret[abs(aquarium[i][j]) - 1] += 1
+        aq = []
+                
+    return ret
+
+def getHint(aquariumsFilled, node):
+    currAquariumsFilled = numAquariumsFilled(node)
+    
+    # Verifie aquariums to unfill
+    for i in range(len(currAquariumsFilled)):
+        if currAquariumsFilled[i] > aquariumsFilled[i]:
+            return str(-(i+1))
+        
+    # Verifie aquariums to fill
+    for i in range(len(currAquariumsFilled)):
+        if currAquariumsFilled[i] < aquariumsFilled[i]:
+            return str(i+1)
+        
+def move(currNode, nAquariums, aquariumsFilled):
+    printAquarium(currNode)
+    aquariumOption = getAquarium(nAquariums)
+    
+    newAquarium = -1
+    
+    if aquariumOption == "?": 
+        print("Hint: %s" % (getHint(aquariumsFilled, currNode)))
+    elif aquariumOption == 0: 
+        return 0
+    elif aquariumOption > 0: 
+        newAquarium = Fill(currNode, aquariumOption).apply()
+    else: 
+        newAquarium = Unfill(currNode, aquariumOption).apply()
+    
+    while newAquarium == -1:
+        if aquariumOption == "?":
+            printAquarium(currNode)
+        elif aquariumOption > 0: 
+            print("\nIt is not possible to fill that aquarium!", end = "")
+        else: 
+            print("\nIt is not possible to unfill that aquarium!", end = "")
+        
+        aquariumOption = getAquarium(nAquariums)
+        
+        if aquariumOption == "?": 
+            print("Hint: %s" % (getHint(aquariumsFilled, currNode)))
+        elif aquariumOption == 0: 
+            return 0
+        elif aquariumOption > 0: 
+            newAquarium = Fill(currNode, aquariumOption).apply()
+        else: 
+            newAquarium = Unfill(currNode, aquariumOption).apply()
+        
+    return newAquarium
+
 def humanMode(initial_node):
     currNode = initial_node
     finalNode = -1
+    
+    result = aStar(initial_node, True)
+    aquariumsFilled = numAquariumsFilled(result)
+    # print(aquariumsFilled)
 
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
 
@@ -434,21 +509,10 @@ def humanMode(initial_node):
         if isObjective(currNode):
             finalNode = currNode
             break
-
-        printAquarium(currNode)
-        aquariumOption = getAquarium(nAquariums)
-        if aquariumOption == 0: return
-        elif aquariumOption > 0: newAquarium = Fill(currNode, aquariumOption).apply()
-        else: newAquarium = Unfill(currNode, aquariumOption).apply()
-        while newAquarium == -1:
-            if aquariumOption > 0: print("\nIt is not possible to fill that aquarium!", end = "")
-            else: print("\nIt is not possible to unfill that aquarium!", end = "")
-            aquariumOption = getAquarium(nAquariums)
-            if aquariumOption == 0: return
-            elif aquariumOption > 0: newAquarium = Fill(currNode, aquariumOption).apply()
-            else: newAquarium = Unfill(currNode, aquariumOption).apply()
-
-        currNode = newAquarium
+        
+        currNode = move(currNode, nAquariums, aquariumsFilled)
+        
+    print("\n\nCONGRATULATIONS!!! YOU HAVE SOLVED THE PUZZLE!!!\n\n")
         
     
 def pcMode():
