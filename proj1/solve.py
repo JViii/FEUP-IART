@@ -94,18 +94,7 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
           notExpanded.push(newNode)
           childrenNumber += 1
 
-    #for i in range(len(aquarium) - 1, -1, -1):
-        #for j in range(len(aquarium)):
-            #if not abs(aquarium[i][j]) in aquariumIndexes:
-                #newNode = Fill(node, j, i).apply()
-                #if newNode != -1: # the apply operator generated a node
-                    #newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
-                    #if not isRepeated(newNode):
-                        #aquariumIndexes.append(abs(aquarium[i][j])) # adds the index of the aquarium
-                        #node.addChildren(newNode)
-                        #notExpanded.push(newNode)
-                        #childrenNumber += 1
-            
+   
 # ---
 # Counts how many cells are filled in row
 def numCellsFilledInRow(aquarium, row):
@@ -292,7 +281,7 @@ def greedy(initial_node):
 
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
 
-    notExpanded = Queue()
+    notExpanded = PriorityQueue("greedy")
 
     start = time()
     print("\nSolving using Greedy Search...")
@@ -302,8 +291,11 @@ def greedy(initial_node):
             finalNode = currNode
             break
 
+        #printAquarium(currNode)
+        #print(currNode.heuristic)
+        #sleep(1)
         #change cost
-        currNode.cost=currNode.h()
+#        currNode.cost=currNode.hRow()
 
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums)
@@ -326,7 +318,7 @@ def aStar(initial_node):
 
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
 
-    notExpanded = Queue()
+    notExpanded = PriorityQueue("aStar")
 
     start = time()
     print("\nSolving using A*...")
@@ -336,8 +328,10 @@ def aStar(initial_node):
             finalNode = currNode
             break
 
+
+        
         #change cost
-        currNode.cost=currNode.cost+currNode.h()
+        #currNode.cost=currNode.cost+currNode.hCol()
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums)

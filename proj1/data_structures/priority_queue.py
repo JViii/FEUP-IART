@@ -1,6 +1,7 @@
 class PriorityQueue:
-    def __init__(self):
+    def __init__(self,heuristic= "none"):
         self.queue = []
+        self.heuristic=heuristic
         
     def size(self):
         return len(self.queue)
@@ -10,7 +11,12 @@ class PriorityQueue:
     
     def push(self, node):
         self.queue.append(node)
-        self.queue = sorted(self.queue,key=lambda node : node.cost)
+        if self.heuristic=="greedy":
+            self.queue = sorted(self.queue,key=lambda node : -node.heuristic)
+        elif self.heuristic=="aStar":
+            self.queue = sorted(self.queue,key=lambda node : node.cost+node.heuristic)
+        else:
+            self.queue = sorted(self.queue,key=lambda node : node.cost)
             
         
     def pop(self):

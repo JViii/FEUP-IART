@@ -24,22 +24,23 @@ class Fill:
     def getCellsToFill(self):
         #line = self.aquarium[self.y]
         aquarium = [] # [[x1,y1],[x2,y2]...]
-        cells = []
+        #cells = []
 
         # Optimizations class with following attributes:
         # CurrentWaterLevel - ultima linha que foi preenchida (-1 se está vazio)
         # Max water level - linha mais a cima do aquario
 
         for line in range(len(self.aquarium) - 1, -1, -1):
-          for col in range(len(self.aquarium)):
-            if self.aquarium[line][col] == -self.aquariumID: # only unfilled cells
-              aquarium.append([line,col])
+            for col in range(len(self.aquarium)):
+                if self.aquarium[line][col] == -self.aquariumID: # only unfilled cells
+                    aquarium.append([line,col])
+            if len(aquarium) != 0: return aquarium
 
-        if(aquarium != []):
-          maxval = max(aquarium,key=lambda x: x[0] )[0]
-          cells = [[y,x] for [y,x] in aquarium if y==maxval]
+      #  if(aquarium != []):
+       #   maxval = max(aquarium,key=lambda x: x[0] )[0]
+        #  cells = [[y,x] for [y,x] in aquarium if y==maxval]
 
-        return cells
+        return aquarium
 
     
     def canFillCol(self, cells):
