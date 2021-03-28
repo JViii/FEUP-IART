@@ -6,6 +6,7 @@ from utils.utils import *
 from data_structures.priority_queue import PriorityQueue
 from data_structures.myqueue import Queue
 from data_structures.stack import Stack
+from puzzles import *
 
 from time import *
 
@@ -22,7 +23,7 @@ def printAquarium(node):
     rowCap = node.state.rowCap
     colCap = node.state.colCap
 
-    print("\n\n-----------------")
+    print("\n-----------------")
     for i in range(len(aquarium)):
         for j in range(len(aquarium)):
             print("%2d" % (aquarium[i][j]), end = " ")
@@ -31,6 +32,9 @@ def printAquarium(node):
     print("-----------------")
     for i in range(len(aquarium)):
          print("%2d" % (colCap[i]), end = " ")
+
+
+    print("\n")
 
 # ---
 # Goes through all states and prints each one of them in order
@@ -354,39 +358,11 @@ def aStar(initial_node, human_mode = False):
 
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-#       AQUARIUM EXAMPLES
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-# ---
-# Ex1
-initialAquarium1 = [[-1, -1, -1, -2, -2, -2],
-                    [-1, -3, -3, -2, -2, -4],
-                    [-1, -3, -3, -2, -2, -4],
-                    [-3, -3, -4, -4, -4, -4],
-                    [-3, -3, -3, -4, -5, -4],
-                    [-3, -3, -6, -6, -5, -4]]
-
-rowCap1 = [3, 5, 5, 2, 5, 5]
-colCap1 = [5, 5, 4, 5, 3, 3]
-
-# ---
-# Ex2
-initialAquarium2 = [[-1,-5,-5,-6,-6,-6],
-                    [-1,-5,-5,-6,-5,-5],
-                    [-1,-1,-5,-5,-5,-5],
-                    [-2,-1,-1,-3,-4,-5],
-                    [-2,-2,-1,-3,-4,-5],
-                    [-3,-3,-3,-3,-3,-5]]
-
-rowCap2 = [3,2,2,4,5,5]
-colCap2 = [5,4,3,4,4,1]
-
-# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #          ALGORITHMS
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 # Starting Node
-initial_node = Node(State(copy_list(initialAquarium1), rowCap1, colCap1))
+initial_node = getStartingNode()
 
 # # ---
 # # Blind Algorithms
@@ -414,7 +390,7 @@ def getOption(max):
     return int(option)
 
 def getAquarium(maxAquarium):
-    option = input("\nSelect an aquarium(Fill: 1/%d)(Unfill: %d/-1)(Leave Game: 0)(?: Hint): " % (maxAquarium, -maxAquarium))
+    option = input("Select an aquarium(Fill: 1/%d)(Unfill: %d/-1)(Leave Game: 0)(?: Hint): " % (maxAquarium, -maxAquarium))
     while True:
         if option == "?": return "?"
         try:
@@ -471,12 +447,11 @@ def move(currNode, nAquariums, aquariumsFilled):
         newAquarium = Unfill(currNode, aquariumOption).apply()
     
     while newAquarium == -1:
-        if aquariumOption == "?":
-            printAquarium(currNode)
-        elif aquariumOption > 0: 
-            print("\nIt is not possible to fill that aquarium!", end = "")
-        else: 
-            print("\nIt is not possible to unfill that aquarium!", end = "")
+        if aquariumOption != "?":
+            if aquariumOption > 0: 
+                print("It is not possible to fill that aquarium!\n", end = "")
+            else: 
+                print("It is not possible to unfill that aquarium!\n", end = "")
         
         aquariumOption = getAquarium(nAquariums)
         
