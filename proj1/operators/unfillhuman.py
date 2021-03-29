@@ -2,7 +2,7 @@ from data_structures.node import Node
 from state.state import State
 from utils.utils import copy_list
 
-class Unfill:
+class UnfillHuman:
     def __init__(self, node, aquariumID):
         self.node = node
         self.aquarium = node.state.aquarium

@@ -1,7 +1,8 @@
 from state.state import State
 from data_structures.node import Node
 from operators.fill import Fill
-from operators.unfill import Unfill
+from operators.unfillhuman import UnfillHuman
+from operators.fillhuman import FillHuman
 from utils.utils import *
 from data_structures.priority_queue import PriorityQueue
 from data_structures.myqueue import Queue
@@ -84,6 +85,8 @@ def isRepeated(node):
             
     return False
 
+# -----------
+
 # ---
 # Applies all the possible operators to the corresponding state
 def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
@@ -104,7 +107,8 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
           notExpanded.push(newNode)
           childrenNumber += 1
 
-   
+# -----------
+
 # ---
 # Counts how many cells are filled in row
 def numCellsFilledInRow(aquarium, row):
@@ -132,24 +136,6 @@ def isObjective(node):
                 return False
 
     return True
-
-# ---
-# Evaluates the current state
-# The lesser is the value the closer we are from a solution
-def evaluate(node):
-    aquarium = node.state.aquarium
-    rowCap = node.state.rowCap
-    colCap = node.state.colCap
-    
-    val = 0
-    
-    # goes through all rows and colls and counts how many cells we need to fill
-    # to complete the aquarium
-    for i in range(len(aquarium)):
-        val += rowCap[i] - numCellsFilledInRow(aquarium, i)
-        val += colCap[i] - numCellsFilledInCol(aquarium, i)
-        
-    return val
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #           ALGORITHMS
@@ -282,7 +268,6 @@ def its(initial_node):
     
     printAlgorithmResults("ITS", start, finalNode)
 
-
 # ---
 # Greedy Search
 def greedy(initial_node):
@@ -301,12 +286,6 @@ def greedy(initial_node):
             finalNode = currNode
             break
 
-        #printAquarium(currNode)
-        #print(currNode.heuristic)
-        #sleep(1)
-        #change cost
-#        currNode.cost=currNode.hRow()
-
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums)
 
@@ -317,8 +296,6 @@ def greedy(initial_node):
             currNode = notExpanded.pop()
     
     printAlgorithmResults("Greedy", start, finalNode)    
-    
-
 
 # ---
 # A* 
@@ -338,11 +315,6 @@ def aStar(initial_node, human_mode = False):
             finalNode = currNode
             break
 
-
-        
-        #change cost
-        #currNode.cost=currNode.cost+currNode.hCol()
-
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums)
 
@@ -354,29 +326,13 @@ def aStar(initial_node, human_mode = False):
     
     if not human_mode: printAlgorithmResults("A*", start, finalNode)   
     else: return finalNode
-
-
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #          ALGORITHMS
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-# Starting Node
-initial_node = getStartingNode()
-
-# # ---
-# # Blind Algorithms
-
-# bfs(initial_node) # mais ou menos 20s
-# dfs(initial_node) # mais ou menos 0.001s
-# ucs(initial_node) # mais ou menos 0.002s
-# its(initial_node) # mais ou menos 1min
-
-# # ---
-# # Heuristic 
-
 def getOption(max):
-    option = input("Select an option: ")
+    option = input("\nSelect an option: ")
     while True:
         try:
             tmp = int(option)
@@ -398,9 +354,9 @@ def getAquarium(maxAquarium):
             if (tmp >= -maxAquarium and tmp <= maxAquarium):
                 break
             else:
-                option = input("Invalid Option! Select an aquarium(1-%d): " % (maxAquarium))
+                option = input("Invalid aquarium! Select an aquarium(1-%d): " % (maxAquarium))
         except:
-            option = input("Invalid Option! Select an aquarium(1-%d): " % (maxAquarium))
+            option = input("Invalid aquarium! Select an aquarium(1-%d): " % (maxAquarium))
         
     return int(option)
 
@@ -442,16 +398,16 @@ def move(currNode, nAquariums, aquariumsFilled):
     elif aquariumOption == 0: 
         return 0
     elif aquariumOption > 0: 
-        newAquarium = Fill(currNode, aquariumOption).apply()
+        newAquarium = FillHuman(currNode, aquariumOption).apply()
     else: 
-        newAquarium = Unfill(currNode, aquariumOption).apply()
+        newAquarium = UnfillHuman(currNode, aquariumOption).apply()
     
     while newAquarium == -1:
         if aquariumOption != "?":
             if aquariumOption > 0: 
-                print("It is not possible to fill that aquarium!\n", end = "")
+                print("Aquarium: %d is already completely filled!\n" % (aquariumOption), end = "")
             else: 
-                print("It is not possible to unfill that aquarium!\n", end = "")
+                print("Aquarium: %d is already completely unfilled!\n" % (aquariumOption), end = "")
         
         aquariumOption = getAquarium(nAquariums)
         
@@ -460,9 +416,9 @@ def move(currNode, nAquariums, aquariumsFilled):
         elif aquariumOption == 0: 
             return 0
         elif aquariumOption > 0: 
-            newAquarium = Fill(currNode, aquariumOption).apply()
+            newAquarium = FillHuman(currNode, aquariumOption).apply()
         else: 
-            newAquarium = Unfill(currNode, aquariumOption).apply()
+            newAquarium = UnfillHuman(currNode, aquariumOption).apply()
         
     return newAquarium
 
@@ -488,8 +444,7 @@ def humanMode(initial_node):
         currNode = move(currNode, nAquariums, aquariumsFilled)
         
     print("\n\nCONGRATULATIONS!!! YOU HAVE SOLVED THE PUZZLE!!!\n\n")
-        
-    
+          
 def pcMode():
     while True:
         print("\n#########################")
@@ -536,6 +491,8 @@ def mainMenu():
 def game():
     mainMenu()
     
+# Starting Node
+initial_node = getStartingNode()
 game()
         
 
