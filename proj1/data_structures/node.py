@@ -4,7 +4,8 @@ class Node:
         self.parent = parent
         self.depth = depth
         self.cost = cost
-        self.heuristic= self.hRowCol()
+        self.heuristic= self.hRow()
+        self.lineMoves()
         
         self.children = []
         self.ind = 0 # represents his number of children in reltaion to his father from left to right
@@ -65,3 +66,30 @@ class Node:
             column = []
 
         return heuristic
+
+    def lineMoves(self):
+        empty = 0
+        full = 0
+        listMoves = []
+
+        aquarium = self.state.aquarium
+        
+        for line in range(len(aquarium) - 1, -1, -1):
+            listMoves1 = {}
+            for col in range(len(aquarium)):
+                numCheios = 0
+                numVazios = 0
+                
+                if abs(aquarium[line][col]) in listMoves1:
+                    numCheios = listMoves1.get(abs(aquarium[line][col]))[0]
+                    numVazios = listMoves1.get(abs(aquarium[line][col]))[1]
+                
+                if aquarium[line][col] > 0: numCheios += 1
+                else: numVazios += 1
+                listMoves1[abs(aquarium[line][col])] = [numCheios, numVazios]
+                
+            listMoves.append(listMoves1)
+
+        # falta implementar o resto da heuristica
+
+        print(listMoves)

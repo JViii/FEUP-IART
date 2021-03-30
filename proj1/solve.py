@@ -209,9 +209,9 @@ def ucs(initial_node):
 
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
 
-    notExpanded = PriorityQueue();
+    notExpanded = PriorityQueue()
 
-    start = time();
+    start = time()
     
     print("\nSolving using UCS...")
 
@@ -238,10 +238,10 @@ def its(initial_node):
     finalNode = -1
 
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
-    notExpanded = Stack();
+    notExpanded = Stack()
     depth = 0
 
-    start = time();
+    start = time()
     
     print("\nSolving using ITS...")
 
@@ -442,6 +442,7 @@ def humanMode(initial_node):
             break
         
         currNode = move(currNode, nAquariums, aquariumsFilled)
+        if currNode == 0: return
         
     print("\n\nCONGRATULATIONS!!! YOU HAVE SOLVED THE PUZZLE!!!\n\n")
           
@@ -494,6 +495,9 @@ def game():
 # Starting Node
 initial_node = getStartingNode()
 game()
+
+# a = {"b": 3}
+# print(a.get("a"))
         
 
 
