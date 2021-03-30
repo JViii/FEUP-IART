@@ -14,6 +14,11 @@ from time import *
 import numbers
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+MAX_REPEATED = 1000
+repeated_nodes = []
+
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #       PRINT FUNCTIONS
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -65,26 +70,37 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
 #     AUXILIAR FUNCTIONS
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
       
+def getOldestRepeated():
+    ret = -1
+    old = -1
+    for i in range(len(repeated_nodes)):
+        if old < repeated_nodes[i][1]:
+            old = repeated_nodes[i][1]
+            ret = i
+    return ret
+
+
+def incRepeatedNodes():
+    for i in range(len(repeated_nodes)):
+        repeated_nodes[i][1] += 1
+
 # ---
 # Verifies if a state is repeated
 # A state can is repeated when:
 #   we have already fill a cell belonging to the same aquarium in the same iteration(verification done in applyOperator)
 #   we have cousins exatly with same aquarium cells filled
 def isRepeated(node):
-    grandparent = node.parent.parent
-    parentIndex = node.parent.ind
-    
-    if grandparent == -1:
-        return False # it has no grandparent
-    
-    children = [l for l in grandparent.children if l.ind != parentIndex]
-    
-    for i in children:
-        cousins = i.children
-        for j in cousins:
-            if compare_lists(j.state.aquarium, node.state.aquarium):
-                return True
-            
+    for i in range(len(repeated_nodes)):
+        if compare_lists(repeated_nodes[i][0].state.aquarium, node.state.aquarium):
+            repeated_nodes[i][1] = 0
+            return True
+
+    if len(repeated_nodes) == MAX_REPEATED:
+        ind = getOldestRepeated()
+        repeated_nodes[ind] = [node, 0]
+    else:
+        repeated_nodes.append([node, 0])
+
     return False
 
 # -----------
@@ -100,16 +116,16 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
     if node.depth == allowedDepth:
         return; 
 
+    incRepeatedNodes()
+
     for i in range(1,nAquariums+1):
       newNode = Fill(node, i).apply()
       if newNode != -1:
         newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
         if not isRepeated(newNode):
-        #   print("Num: %d " % (i))
           node.addChildren(newNode)
           notExpanded.push(newNode)
           childrenNumber += 1
-        #   printAquarium(newNode)
 
 # -----------
 
@@ -506,9 +522,7 @@ def game():
 # Starting Node
 initial_node = getStartingNode()
 game()
-
-# a = {"b": 3}
-# print(a.get("a"))
+# print(a.get([[1, 2]]))
         
 
 
