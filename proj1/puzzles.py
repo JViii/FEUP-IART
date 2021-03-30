@@ -12,7 +12,7 @@ from utils.utils import *
 def getStartingNode():
     # r=randrange(4)
     r = 7
-    switcher = {
+    switcher ={
     0:Node(State(copy_list(initialAquarium1), rowCap1, colCap1)),
     1:Node(State(copy_list(initialAquarium2), rowCap2, colCap2)),
     2:Node(State(copy_list(initialAquarium3), rowCap3, colCap3)),
@@ -21,6 +21,7 @@ def getStartingNode():
     5:Node(State(copy_list(initialAquarium6), rowCap6, colCap6)),
     6:Node(State(copy_list(initialAquarium7), rowCap7, colCap7)),
     7:Node(State(copy_list(initialAquarium8), rowCap8, colCap8)),
+    8:Node(State(copy_list(initialAquarium9), rowCap9, colCap9)),
     }
     return switcher.get(r)
 
@@ -118,6 +119,7 @@ colCap7 = [5,3,4,5,3,1]
 
 # ---
 # Ex8- 10x10 easy
+<<<<<<< HEAD
 initialAquarium8 = [[-1,-2,-3,-4,-4,-4,-4,-4,-4,-7],
                     [-1,-2,-3,-4,-4,-4,-7,-7,-7,-7],
                     [-2,-2,-3,-5,-6,-4,-7,-7,-7,-7],
@@ -128,6 +130,33 @@ initialAquarium8 = [[-1,-2,-3,-4,-4,-4,-4,-4,-4,-7],
                     [-10,-12,-11,-11,-7,-7,-7,-7,-13,-13],
                     [-12,-12,-11,-11,-11,-11,-14,-7,-13,-13],
                     [-12,-12,-12,-12,-12,-11,-14,-13,-13,-13]]
+=======
+initialAquarium8 = [[-1, -2, -3, -4, -4, -4, -4, -4, -4, -7],
+                    [-1, -2, -3, -4, -4, -4, -7, -7, -7, -7],
+                    [-2, -2, -3, -5, -6, -4, -7, -7, -7, -7],
+                    [-8, -8, -8, -5, -6, -6, -6, -7, -9, -7],
+                    [-6, -6, -6, -6, -6, -7, -7, -7, -9, -9],
+                    [-10,-10,-10,-6, -11,-7, -7, -7, -7, -9],
+                    [-10,-12,-10,-11,-11,-11,-11,-7, -7, -7],
+                    [-10,-12,-11,-11,-7, -7, -7, -7, -13,-13],
+                    [-12,-12,-11,-11,-11,-11,-14,-7, -13,-13],
+                    [-12,-12,-12,-12,-12,-11,-14,-13,-13,-13]]
+
+>>>>>>> b75ea490c0fe31e396d3ecd8365b39fc5819d854
 
 rowCap8 = [9,6,6,8,7,2,5,9,9,9]
 colCap8 = [9,7,9,9,8,7,3,5,7,6]
+
+# Ex9- 6x6 normal -> demora +/- 38s
+initialAquarium9 = [[-1, -1, -2, -2, -3, -3],
+                    [-2, -2, -2, -3, -3, -3],
+                    [-4, -5, -5, -3, -8, -3],
+                    [-4, -4, -5, -8, -8, -3],
+                    [-6, -4, -5, -7, -9, -3],
+                    [-6, -5, -5, -7, -9, -3]]
+
+
+rowCap9 = [4,3,1,3,4,4]
+colCap9 = [4,3,2,4,3,3]
+
+

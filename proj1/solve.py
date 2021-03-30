@@ -309,7 +309,7 @@ def greedy(initial_node):
             break
 
         print("&&&&&&&&&&&&&")
-        printAquarium(currNode)
+        #printAquarium(currNode)
 
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums)
@@ -341,7 +341,7 @@ def aStar(initial_node, human_mode = False):
             break
         # sleep(1)
         # print("&&&&&&&&&&&&&")
-        printAquarium(currNode)
+        #printAquarium(currNode)
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums)
 
