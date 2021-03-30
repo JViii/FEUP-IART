@@ -27,12 +27,14 @@ def printAquarium(node):
     print("\n-----------------")
     for i in range(len(aquarium)):
         for j in range(len(aquarium)):
-            print("%2d" % (aquarium[i][j]), end = " ")
+            print("%3d" % (aquarium[i][j]), end = " ")
         print("| %d" % (rowCap[i]))
     
     print("-----------------")
     for i in range(len(aquarium)):
-         print("%2d" % (colCap[i]), end = " ")
+         print("%3d" % (colCap[i]), end = " ")
+
+    print("\n $$$ Moves: %d" % (node.exp))
 
 
     print("\n")
@@ -103,9 +105,11 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
       if newNode != -1:
         newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
         if not isRepeated(newNode):
+        #   print("Num: %d " % (i))
           node.addChildren(newNode)
           notExpanded.push(newNode)
           childrenNumber += 1
+        #   printAquarium(newNode)
 
 # -----------
 
@@ -159,6 +163,8 @@ def bfs(initial_node):
         if isObjective(currNode):
             finalNode = currNode
             break
+        print("&&&&&&&&&&&&&")
+        printAquarium(currNode)
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums)
@@ -286,6 +292,9 @@ def greedy(initial_node):
             finalNode = currNode
             break
 
+        print("&&&&&&&&&&&&&")
+        printAquarium(currNode)
+
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums)
 
@@ -295,7 +304,7 @@ def greedy(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    printAlgorithmResults("Greedy", start, finalNode)    
+    # printAlgorithmResults("Greedy", start, finalNode)    
 
 # ---
 # A* 
@@ -314,7 +323,9 @@ def aStar(initial_node, human_mode = False):
         if isObjective(currNode):
             finalNode = currNode
             break
-
+        # sleep(1)
+        # print("&&&&&&&&&&&&&")
+        printAquarium(currNode)
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums)
 

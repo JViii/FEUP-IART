@@ -4,8 +4,8 @@ class Node:
         self.parent = parent
         self.depth = depth
         self.cost = cost
-        self.heuristic= self.hRow()
-        self.lineMoves()
+        self.heuristic= self.lineMoves()
+        self.exp = self.heuristic
         
         self.children = []
         self.ind = 0 # represents his number of children in reltaion to his father from left to right
@@ -47,7 +47,6 @@ class Node:
         return heuristic
 
     def hRowCol(self):
-        #return (self.hCol()+self.hRow()) 
         heuristic=len(self.state.aquarium)
         column = []
 
@@ -68,28 +67,54 @@ class Node:
         return heuristic
 
     def lineMoves(self):
-        empty = 0
-        full = 0
-        listMoves = []
-
         aquarium = self.state.aquarium
-        
+        heuristic = 0
+
         for line in range(len(aquarium) - 1, -1, -1):
-            listMoves1 = {}
+            cells = {}
             for col in range(len(aquarium)):
                 numCheios = 0
                 numVazios = 0
                 
-                if abs(aquarium[line][col]) in listMoves1:
-                    numCheios = listMoves1.get(abs(aquarium[line][col]))[0]
-                    numVazios = listMoves1.get(abs(aquarium[line][col]))[1]
+                if abs(aquarium[line][col]) in cells:
+                    numCheios = cells.get(abs(aquarium[line][col]))[0]
+                    numVazios = cells.get(abs(aquarium[line][col]))[1]
                 
                 if aquarium[line][col] > 0: numCheios += 1
                 else: numVazios += 1
-                listMoves1[abs(aquarium[line][col])] = [numCheios, numVazios]
-                
-            listMoves.append(listMoves1)
+                cells[abs(aquarium[line][col])] = [numCheios, numVazios]
 
-        # falta implementar o resto da heuristica
+            heuristic += self.numMoves(cells, self.state.rowCap[line])
 
-        print(listMoves)
+        return heuristic
+
+    def numMoves(self, cells, cap):
+        numFill = 0
+        for aq in cells:
+            numFill += cells.get(aq)[0]
+
+        if (cap-numFill) == 0: return 0
+
+        min = self.selectMinAquariumEmpty(cells)
+        if cells.get(min)[1] > (cap - numFill):  return 1000
+
+        min = 100000000
+        for aq in cells:
+            if cells.get(aq)[1] != 0:
+                cells1 = dict(cells)
+                cells1[aq] = [cells.get(aq)[1], 0]
+                val = 1 + self.numMoves(cells1, cap)
+                if val < min: min = val
+
+        return min
+        
+    def selectMinAquariumEmpty(self, cells):
+        min = len(self.state.aquarium) + 1
+        id = -1
+        
+        for aq in cells:
+            if cells.get(aq)[1] != 0 and cells.get(aq)[1] < min:
+                min = cells.get(aq)[1]
+                id = aq
+
+        return id
