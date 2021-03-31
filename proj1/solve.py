@@ -73,6 +73,8 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
 def getOldestRepeated():
     ret = -1
     old = -1
+    global repeated_nodes
+
     for i in range(len(repeated_nodes)):
         if old < repeated_nodes[i][1]:
             old = repeated_nodes[i][1]
@@ -81,6 +83,8 @@ def getOldestRepeated():
 
 
 def incRepeatedNodes():
+    global repeated_nodes
+
     for i in range(len(repeated_nodes)):
         repeated_nodes[i][1] += 1
 
@@ -90,6 +94,8 @@ def incRepeatedNodes():
 #   we have already fill a cell belonging to the same aquarium in the same iteration(verification done in applyOperator)
 #   we have cousins exatly with same aquarium cells filled
 def isRepeated(node):
+    global repeated_nodes
+
     for i in range(len(repeated_nodes)):
         if compare_lists(repeated_nodes[i][0].state.aquarium, node.state.aquarium):
             repeated_nodes[i][1] = 0
@@ -118,15 +124,21 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1, alg = "blind
 
     incRepeatedNodes()
 
+    # cont = 0
+
     for i in range(1,nAquariums+1):
-      newNode = Fill(node, i).apply()
-      if newNode != -1 and not isRepeated(newNode):
-        # newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
-        # if not isRepeated(newNode):
-            # printAquarium(newNode)
-            # node.addChildren(newNode)
-            if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
-                notExpanded.push(newNode)
+    #   if not (i in node.impossibleAquariums):
+        newNode = Fill(node, i).apply()
+        if newNode != -1 and not isRepeated(newNode):
+            # newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
+            # if not isRepeated(newNode):
+                # printAquarium(newNode)
+                # node.addChildren(newNode)
+                if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
+                    # print(cont)
+                    # cont += 1
+                    # printAquarium(newNode)
+                    notExpanded.push(newNode)
             # childrenNumber += 1
 
 # -----------
@@ -173,6 +185,7 @@ def bfs(initial_node):
 
     notExpanded = Queue()
 
+    global repeated_nodes
     repeated_nodes = []
 
     start = time()
@@ -207,6 +220,7 @@ def dfs(initial_node):
 
     notExpanded = Stack()
 
+    global repeated_nodes
     repeated_nodes = []
 
     start = time()
@@ -239,6 +253,7 @@ def ucs(initial_node):
 
     notExpanded = PriorityQueue()
 
+    global repeated_nodes
     repeated_nodes = []
 
     start = time()
@@ -275,6 +290,7 @@ def its(initial_node):
     
     print("\nSolving using ITS...")
 
+    global repeated_nodes
     repeated_nodes = []
 
     while True:
@@ -310,6 +326,7 @@ def greedy(initial_node):
 
     notExpanded = PriorityQueue("greedy")
 
+    global repeated_nodes
     repeated_nodes = []
 
     start = time()
@@ -320,8 +337,7 @@ def greedy(initial_node):
             finalNode = currNode
             break
 
-        # print("&&&&&&&&&&&&&")
-        #printAquarium(currNode)
+        # printAquarium(currNode)
 
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums, "heuristic")
@@ -344,20 +360,26 @@ def aStar(initial_node, human_mode = False):
 
     notExpanded = PriorityQueue("aStar")
 
+    global repeated_nodes
     repeated_nodes = []
+    # print(repeated_nodes)
+    # repeated_nodes = []
 
     start = time()
     if not human_mode: print("\nSolving using A*...")
     # num = 0
     while True:
-        # # print("Num: %d" % (num))
+        # print("Num: %d" % (num))
         # num += 1
         if isObjective(currNode):
             finalNode = currNode
             break
         # sleep(1)
         # print("&&&&&&&&&&&&&")
-        printAquarium(currNode)
+        # print("&&&&&&&&&&&&&")
+        # print("&&&&&&&&&&&&&")
+        # printAquarium(currNode)
+        print(currNode.impossibleAquariums)
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "heuristic")
 

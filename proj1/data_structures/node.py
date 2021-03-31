@@ -4,8 +4,10 @@ class Node:
         self.parent = parent
         self.depth = depth
         self.cost = cost
+        self.impossibleAquariums = []
         self.heuristic= self.lineMoves()
         self.exp = self.heuristic
+        # print(self.impossibleAquariums)
         self.children = []
         self.ind = 0 # represents his number of children in reltaion to his father from left to right
         
@@ -93,6 +95,8 @@ class Node:
             heuristic += nm
             linesBellow.insert(0, dict(cells))
 
+        # print( "---------------")
+
         return heuristic
 
     def possibleAquarium(self, cells, line, aq, linesBellow):
@@ -139,6 +143,7 @@ class Node:
         if cells.get(min)[1] > (cap - numFill):  return 1000
 
         min = 100000000
+        imp = []
         for aq in cells:
 
             if cells.get(aq)[1] != 0:
@@ -150,6 +155,10 @@ class Node:
                 if moves != -1: 
                     val = moves + 1 + self.numMoves(cells1, cap, line, linesBellow)
                     if val < min: min = val
+                    if val >= 1000: imp.append(aq)
+                else: imp.append(aq)
+        
+        self.impossibleAquariums = list(imp)
 
         return min
         
