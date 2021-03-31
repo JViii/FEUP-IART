@@ -15,7 +15,7 @@ import numbers
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-MAX_REPEATED = 1000
+MAX_REPEATED = 5000
 repeated_nodes = []
 
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -107,7 +107,7 @@ def isRepeated(node):
 
 # ---
 # Applies all the possible operators to the corresponding state
-def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
+def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1, alg = "blind"):
     aquarium = node.state.aquarium
     childrenNumber = 0
     
@@ -120,12 +120,14 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1):
 
     for i in range(1,nAquariums+1):
       newNode = Fill(node, i).apply()
-      if newNode != -1:
-        newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
-        if not isRepeated(newNode):
-          node.addChildren(newNode)
-          notExpanded.push(newNode)
-          childrenNumber += 1
+      if newNode != -1 and not isRepeated(newNode):
+        # newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
+        # if not isRepeated(newNode):
+            # printAquarium(newNode)
+            # node.addChildren(newNode)
+            if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
+                notExpanded.push(newNode)
+            # childrenNumber += 1
 
 # -----------
 
@@ -171,6 +173,8 @@ def bfs(initial_node):
 
     notExpanded = Queue()
 
+    repeated_nodes = []
+
     start = time()
     
     print("\nSolving using BFS...")
@@ -203,6 +207,8 @@ def dfs(initial_node):
 
     notExpanded = Stack()
 
+    repeated_nodes = []
+
     start = time()
     
     print("\nSolving using DFS...")
@@ -232,6 +238,8 @@ def ucs(initial_node):
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
 
     notExpanded = PriorityQueue()
+
+    repeated_nodes = []
 
     start = time()
     
@@ -267,6 +275,8 @@ def its(initial_node):
     
     print("\nSolving using ITS...")
 
+    repeated_nodes = []
+
     while True:
         while True:
             if isObjective(currNode):
@@ -300,6 +310,8 @@ def greedy(initial_node):
 
     notExpanded = PriorityQueue("greedy")
 
+    repeated_nodes = []
+
     start = time()
     print("\nSolving using Greedy Search...")
 
@@ -308,11 +320,11 @@ def greedy(initial_node):
             finalNode = currNode
             break
 
-        print("&&&&&&&&&&&&&")
+        # print("&&&&&&&&&&&&&")
         #printAquarium(currNode)
 
         # apply operator
-        applyOperator(currNode, notExpanded,nAquariums)
+        applyOperator(currNode, notExpanded,nAquariums, "heuristic")
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -320,7 +332,7 @@ def greedy(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    # printAlgorithmResults("Greedy", start, finalNode)    
+    printAlgorithmResults("Greedy", start, finalNode)    
 
 # ---
 # A* 
@@ -332,18 +344,22 @@ def aStar(initial_node, human_mode = False):
 
     notExpanded = PriorityQueue("aStar")
 
+    repeated_nodes = []
+
     start = time()
     if not human_mode: print("\nSolving using A*...")
-
+    # num = 0
     while True:
+        # # print("Num: %d" % (num))
+        # num += 1
         if isObjective(currNode):
             finalNode = currNode
             break
         # sleep(1)
         # print("&&&&&&&&&&&&&")
-        #printAquarium(currNode)
+        printAquarium(currNode)
         # apply operator
-        applyOperator(currNode, notExpanded, nAquariums)
+        applyOperator(currNode, notExpanded, nAquariums, "heuristic")
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -523,7 +539,9 @@ def game():
 initial_node = getStartingNode()
 game()
 # print(a.get([[1, 2]]))
-        
+# a = [1]
+# a.insert(0, 2)
+# print(a)        
 
 
 

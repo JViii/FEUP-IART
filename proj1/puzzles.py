@@ -11,7 +11,7 @@ from utils.utils import *
 
 def getStartingNode():
     # r=randrange(4)
-    r = 7
+    r = 6
     switcher ={
     0:Node(State(copy_list(initialAquarium1), rowCap1, colCap1)),
     1:Node(State(copy_list(initialAquarium2), rowCap2, colCap2)),
@@ -141,7 +141,6 @@ initialAquarium9 = [[-1, -1, -2, -2, -3, -3],
                     [-4, -4, -5, -8, -8, -3],
                     [-6, -4, -5, -7, -9, -3],
                     [-6, -5, -5, -7, -9, -3]]
-
 
 rowCap9 = [4,3,1,3,4,4]
 colCap9 = [4,3,2,4,3,3]

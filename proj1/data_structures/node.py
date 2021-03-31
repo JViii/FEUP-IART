@@ -6,7 +6,6 @@ class Node:
         self.cost = cost
         self.heuristic= self.lineMoves()
         self.exp = self.heuristic
-        
         self.children = []
         self.ind = 0 # represents his number of children in reltaion to his father from left to right
         
@@ -66,10 +65,14 @@ class Node:
 
         return heuristic
 
+    # ---
+    # DIFFERENT HEURISTIC
+
     def lineMoves(self):
         aquarium = self.state.aquarium
         heuristic = 0
 
+        linesBellow = []
         for line in range(len(aquarium) - 1, -1, -1):
             cells = {}
             for col in range(len(aquarium)):
@@ -82,29 +85,71 @@ class Node:
                 
                 if aquarium[line][col] > 0: numCheios += 1
                 else: numVazios += 1
+
                 cells[abs(aquarium[line][col])] = [numCheios, numVazios]
 
-            heuristic += self.numMoves(cells, self.state.rowCap[line])
+            nm = self.numMoves(cells, self.state.rowCap[line], line, linesBellow)
+            # print(cells, self.state.rowCap[line], nm)
+            heuristic += nm
+            linesBellow.insert(0, dict(cells))
 
         return heuristic
 
-    def numMoves(self, cells, cap):
+    def possibleAquarium(self, cells, line, aq, linesBellow):
+        aquarium = self.state.aquarium
+        colCap = self.state.colCap
+        rowCap = self.state.rowCap
+
+        max = -1
+
+        for j in range(len(aquarium)):
+            counterFill = 0
+            counterEmpty = 0
+            
+            for i in range(len(aquarium)):
+                if aquarium[i][j] > 0: counterFill += 1
+                if line < i and aquarium[i][j] < 0 and abs(aquarium[i][j]) == aq: 
+                    counterEmpty += 1 
+                    if (linesBellow[i - line - 1].get(aq)[1] + self.getNumFilledCellsInRow(linesBellow[i - line - 1])) > rowCap[i]: 
+                        # print((self.getNumFilledCellsInRow(linesBellow[i - line - 1])), aq, line, i)
+                        return -1
+            
+            if (counterEmpty + counterFill) > colCap[j]: return -1
+            if max < counterEmpty: max = counterEmpty
+
+        return max
+
+    def getNumFilledCellsInRow(self, cells):
         numFill = 0
+
         for aq in cells:
             numFill += cells.get(aq)[0]
 
+        return numFill
+
+    def numMoves(self, cells, cap, line, linesBellow):
+        # quantas celulas estao cheias na linha
+        numFill = self.getNumFilledCellsInRow(cells)
+
+        # linha ja esta cheia
         if (cap-numFill) == 0: return 0
 
+        # já não é possivel chagar a uma solucao
         min = self.selectMinAquariumEmpty(cells)
         if cells.get(min)[1] > (cap - numFill):  return 1000
 
         min = 100000000
         for aq in cells:
+
             if cells.get(aq)[1] != 0:
                 cells1 = dict(cells)
                 cells1[aq] = [cells.get(aq)[1], 0]
-                val = 1 + self.numMoves(cells1, cap)
-                if val < min: min = val
+                # print("Id: %s -> Result: %s" % (aq, self.possibleAquarium(cells1, line, aq)))
+                moves = self.possibleAquarium(cells1, line, aq, linesBellow)
+                # print(aq, moves)
+                if moves != -1: 
+                    val = moves + 1 + self.numMoves(cells1, cap, line, linesBellow)
+                    if val < min: min = val
 
         return min
         
