@@ -39,7 +39,7 @@ def printAquarium(node):
     for i in range(len(aquarium)):
          print("%3d" % (colCap[i]), end = " ")
 
-    print("\n $$$ Moves: %d" % (node.exp))
+    # print("\n $$$ Moves: %d" % (node.heuristic))
 
 
     print("\n")
@@ -113,7 +113,7 @@ def isRepeated(node):
 
 # ---
 # Applies all the possible operators to the corresponding state
-def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1, alg = "blind"):
+def applyOperator(node, notExpanded, nAquariums, alg, allowedDepth = -1):
     aquarium = node.state.aquarium
     childrenNumber = 0
     
@@ -134,10 +134,12 @@ def applyOperator(node, notExpanded, nAquariums, allowedDepth = -1, alg = "blind
             # if not isRepeated(newNode):
                 # printAquarium(newNode)
                 # node.addChildren(newNode)
+                # print(alg)
                 if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
                     # print(cont)
                     # cont += 1
                     # printAquarium(newNode)
+                    # print(newNode.heuristic)
                     notExpanded.push(newNode)
             # childrenNumber += 1
 
@@ -200,7 +202,7 @@ def bfs(initial_node):
         printAquarium(currNode)
 
         # apply operator
-        applyOperator(currNode, notExpanded, nAquariums)
+        applyOperator(currNode, notExpanded, nAquariums, "blind")
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -233,7 +235,7 @@ def dfs(initial_node):
             break
 
         # apply operator
-        applyOperator(currNode, notExpanded, nAquariums)
+        applyOperator(currNode, notExpanded, nAquariums, "blind")
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -266,7 +268,7 @@ def ucs(initial_node):
             break
 
         # apply operator
-        applyOperator(currNode, notExpanded, nAquariums)
+        applyOperator(currNode, notExpanded, nAquariums, "blind")
 
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -300,7 +302,7 @@ def its(initial_node):
                 break
     
             # apply operator
-            applyOperator(currNode, notExpanded, nAquariums, depth)
+            applyOperator(currNode, notExpanded, nAquariums, "blind", depth)
     
             # selects next node to process
             if notExpanded.isEmpty(): # no more nodes to expand, no solution found
@@ -375,11 +377,11 @@ def aStar(initial_node, human_mode = False):
             finalNode = currNode
             break
         # sleep(1)
+        print("&&&&&&&&&&&&&")
         # print("&&&&&&&&&&&&&")
         # print("&&&&&&&&&&&&&")
-        # print("&&&&&&&&&&&&&")
-        # printAquarium(currNode)
-        print(currNode.impossibleAquariums)
+        printAquarium(currNode)
+        # print(currNode.impossibleAquariums)
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "heuristic")
 

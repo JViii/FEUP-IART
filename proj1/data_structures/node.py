@@ -114,8 +114,7 @@ class Node:
                 if aquarium[i][j] > 0: counterFill += 1
                 if line < i and aquarium[i][j] < 0 and abs(aquarium[i][j]) == aq: 
                     counterEmpty += 1 
-                    if (linesBellow[i - line - 1].get(aq)[1] + self.getNumFilledCellsInRow(linesBellow[i - line - 1])) > rowCap[i]: 
-                        # print((self.getNumFilledCellsInRow(linesBellow[i - line - 1])), aq, line, i)
+                    if (linesBellow[i - line - 1].get(aq)[1] + self.getNumFilledCellsInRow(linesBellow[i - line - 1])) > rowCap[i]:
                         return -1
             
             if (counterEmpty + counterFill) > colCap[j]: return -1
@@ -143,22 +142,16 @@ class Node:
         if cells.get(min)[1] > (cap - numFill):  return 1000
 
         min = 100000000
-        imp = []
         for aq in cells:
 
             if cells.get(aq)[1] != 0:
                 cells1 = dict(cells)
                 cells1[aq] = [cells.get(aq)[1], 0]
-                # print("Id: %s -> Result: %s" % (aq, self.possibleAquarium(cells1, line, aq)))
                 moves = self.possibleAquarium(cells1, line, aq, linesBellow)
                 # print(aq, moves)
                 if moves != -1: 
                     val = moves + 1 + self.numMoves(cells1, cap, line, linesBellow)
                     if val < min: min = val
-                    if val >= 1000: imp.append(aq)
-                else: imp.append(aq)
-        
-        self.impossibleAquariums = list(imp)
 
         return min
         
