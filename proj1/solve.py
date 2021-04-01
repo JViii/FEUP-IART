@@ -112,20 +112,18 @@ def isRepeated(node):
 # Applies all the possible operators to the corresponding state
 def applyOperator(node, notExpanded, nAquariums, alg, allowedDepth = -1):
     aquarium = node.state.aquarium
-    childrenNumber = 0
     
     # Verifies if we reach the max depth
     # Only used for iterative deepening search
-    if node.depth == allowedDepth:
-        return; 
+    if node.depth == allowedDepth: return; 
 
     incRepeatedNodes()
 
     for i in range(1,nAquariums+1):
         newNode = Fill(node, i).apply()
         if newNode != -1 and not isRepeated(newNode):
-                if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
-                    notExpanded.push(newNode)
+            if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
+                notExpanded.push(newNode)
 
 # -----------
 
@@ -274,10 +272,9 @@ def its(initial_node):
     
     print("\nSolving using ITS...")
 
-    global repeated_nodes
-    repeated_nodes = []
-
     while True:
+        global repeated_nodes
+        repeated_nodes = []
         while True:
             if isObjective(currNode):
                 finalNode = currNode
@@ -295,7 +292,7 @@ def its(initial_node):
         if finalNode != -1:
             break;
             
-        currNode = Node(State(copy_list(initial_node.state.aquarium), rowCap1, colCap1)) # returns to initial node
+        currNode = Node(State(copy_list(initial_node.state.aquarium), list(initial_node.state.rowCap), list(initial_node.state.colCap))) # returns to initial node
         depth += 1 # increases its depth
     
     printAlgorithmResults("ITS", start, finalNode)
