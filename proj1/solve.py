@@ -64,7 +64,9 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
         
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("%s took: %.6f s" % (algorithm, elapsed_time))
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
+    return elapsed_time
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #     AUXILIAR FUNCTIONS
@@ -210,7 +212,7 @@ def bfs(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    printAlgorithmResults("BFS", start, finalNode)
+    return [finalNode,printAlgorithmResults("BFS", start, finalNode)]
         
 # ---    
 # Depth First Search        
@@ -243,7 +245,7 @@ def dfs(initial_node):
         else:
             currNode = notExpanded.pop()
         
-    printAlgorithmResults("DFS", start, finalNode)
+    return [finalNode,printAlgorithmResults("DFS", start, finalNode)]
 
 # ---
 # Uniform Cost Search
@@ -276,7 +278,7 @@ def ucs(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    printAlgorithmResults("UCS", start, finalNode) 
+    return [finalNode,printAlgorithmResults("UCS", start, finalNode) ]
     
 # ---
 # Iterative Deepening Search
@@ -316,7 +318,7 @@ def its(initial_node):
         currNode = Node(State(copy_list(initial_node.state.aquarium), rowCap1, colCap1)) # returns to initial node
         depth += 1 # increases its depth
     
-    printAlgorithmResults("ITS", start, finalNode)
+    return [finalNode,printAlgorithmResults("ITS", start, finalNode)]
 
 # ---
 # Greedy Search
@@ -350,7 +352,8 @@ def greedy(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    printAlgorithmResults("Greedy", start, finalNode)    
+        
+    return [finalNode,printAlgorithmResults("Greedy", start, finalNode)]
 
 # ---
 # A* 
@@ -391,7 +394,7 @@ def aStar(initial_node, human_mode = False):
         else:
             currNode = notExpanded.pop()
     
-    if not human_mode: printAlgorithmResults("A*", start, finalNode)   
+    if not human_mode: return [finalNode,printAlgorithmResults("A*", start, finalNode)]   
     else: return finalNode
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -560,8 +563,8 @@ def game():
     mainMenu()
     
 # Starting Node
-initial_node = getStartingNode()
-game()
+#initial_node = getStartingNode()
+#game()
 # print(a.get([[1, 2]]))
 # a = [1]
 # a.insert(0, 2)
