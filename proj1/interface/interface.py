@@ -26,7 +26,6 @@ class Interface:
             self.screen = pygame.display.set_mode((800, 900))
 
     def updateNode(self,node):
-        print(node)
         self.currNode=node
 
 

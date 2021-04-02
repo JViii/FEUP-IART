@@ -530,8 +530,8 @@ def game():
     mainMenu()
     
 # Starting Node
-initial_node = getStartingNode()
-game()
+#initial_node = getStartingNode()
+#game()
 # print(a.get([[1, 2]]))
 # a = [1]
 # a.insert(0, 2)
