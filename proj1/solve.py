@@ -56,8 +56,8 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
 
     if final_node == -1:
         print("There is no solution to this problem")
-    else:
-        printSequenceOfStates(final_node)
+    #else:
+       # printSequenceOfStates(final_node)
         
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("%s took: %.6f s" % (algorithm, elapsed_time))
@@ -177,21 +177,28 @@ def bfs(initial_node):
     start = time()
     
     print("\nSolving using BFS...")
-
+    maximum=0
+    count=0
     while True:
+        count+=1
+
         if isObjective(currNode):
             finalNode = currNode
             break
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "blind")
-
+        if(len(notExpanded)>maximum):
+            maximum=len(notExpanded)
+        
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
             break
         else:
             currNode = notExpanded.pop()
     
+    print("Numero de estados: %f"%count)
+    print("Memory: %f"%maximum)
     return [finalNode,printAlgorithmResults("BFS", start, finalNode)]
         
 # ---    
@@ -210,21 +217,26 @@ def dfs(initial_node):
     start = time()
     
     print("\nSolving using DFS...")
-
+    maximum=0
+    count=0
     while True:
+        count+=1
+
         if isObjective(currNode):
             finalNode = currNode
             break
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "blind")
-
+        if(notExpanded.size()>maximum):   
+            maximum=notExpanded.size()
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
             break
         else:
             currNode = notExpanded.pop()
-        
+    print("Numero de estados: %f"%count)
+    print("Memory: %f"%maximum)    
     return [finalNode,printAlgorithmResults("DFS", start, finalNode)]
 
 # ---
@@ -243,21 +255,25 @@ def ucs(initial_node):
     start = time()
     
     print("\nSolving using UCS...")
-
+    maximum=0
+    count=0
     while True:
+        count+=1
         if isObjective(currNode):
             finalNode = currNode
             break
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "blind")
-
+        if(notExpanded.size()>maximum):   
+            maximum=notExpanded.size()
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
             break
         else:
             currNode = notExpanded.pop()
-    
+    print("Numero de estados: %f"%count)
+    print("Memory: %f"%maximum)
     return [finalNode,printAlgorithmResults("UCS", start, finalNode) ]
     
 # ---
@@ -273,8 +289,10 @@ def its(initial_node):
     start = time()
     
     print("\nSolving using ITS...")
-
+    maximum=0
+    count=0
     while True:
+        count+=1
         global repeated_nodes
         repeated_nodes = []
         while True:
@@ -284,7 +302,8 @@ def its(initial_node):
     
             # apply operator
             applyOperator(currNode, notExpanded, nAquariums, "blind", depth)
-    
+            if(notExpanded.size()>maximum):   
+                maximum=notExpanded.size()
             # selects next node to process
             if notExpanded.isEmpty(): # no more nodes to expand, no solution found
                 break
@@ -296,7 +315,8 @@ def its(initial_node):
             
         currNode = Node(State(copy_list(initial_node.state.aquarium), list(initial_node.state.rowCap), list(initial_node.state.colCap))) # returns to initial node
         depth += 1 # increases its depth
-    
+    print("Numero de estados: %f"%count)
+    print("Memory: %f"%maximum)
     return [finalNode,printAlgorithmResults("ITS", start, finalNode)]
 
 # ---
@@ -315,21 +335,26 @@ def greedy(initial_node):
     start = time()
     print("\nSolving using Greedy Search...")
 
+    maximum=0
+    count=0
     while True:
+        count+=1
         if isObjective(currNode):
             finalNode = currNode
             break
 
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums, "heuristic")
-
+        if(notExpanded.size()>maximum):
+            maximum=notExpanded.size()
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
             break
         else:
             currNode = notExpanded.pop()
     
-        
+    print("Numero de estados: %f"%count)
+    print("Memory: %f"%maximum)    
     return [finalNode,printAlgorithmResults("Greedy", start, finalNode)]
 
 # ---
@@ -347,20 +372,27 @@ def aStar(initial_node, human_mode = False):
 
     start = time()
     if not human_mode: print("\nSolving using A*...")
+
+    maximum=0
+    count=0
     while True:
+        count+=1
         if isObjective(currNode):
             finalNode = currNode
             break
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "heuristic")
-
+        if(notExpanded.size()>maximum):
+            maximum=notExpanded.size()
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
             break
         else:
             currNode = notExpanded.pop()
-    
+
+    print("Numero de estados: %f"%count)
+    print("Memory: %f"%maximum)
     if not human_mode: return [finalNode,printAlgorithmResults("A*", start, finalNode)]   
     else: return finalNode
     
@@ -530,8 +562,8 @@ def game():
     mainMenu()
     
 # Starting Node
-#initial_node = getStartingNode()
-#game()
+initial_node = getStartingNode()
+game()
 # print(a.get([[1, 2]]))
 # a = [1]
 # a.insert(0, 2)
