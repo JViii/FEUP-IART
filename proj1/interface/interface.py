@@ -461,14 +461,12 @@ class Interface:
     def fillAquarium(self,option):
         newNode=FillHuman(self.currNode, option).apply()
         self.updateNode(newNode)
-        #printAquarium(newNode)
-        #self.human_mode()
+
 
     def unfillAquarium(self,option):
         newNode=UnfillHuman(self.currNode, option).apply()
         self.updateNode(newNode)
-        #printAquarium(newNode)
-        #self.human_mode()
+
 
     def unfill(self):
         buttons=[]
@@ -674,8 +672,8 @@ class Interface:
             if game_state == GameState.TITLE:
                 self.updateNode(self.initial_node)
                 self.result = aStar(self.initial_node, True)
-                self.aquariumsFilled = numAquariumsFilled(self.result)
                 self.nAquariums = max([abs(x) for x in set(sum(self.initial_node.state.aquarium,[]))]) #Number of aquariums
+                self.aquariumsFilled = numAquariumsFilled(self.nAquariums,self.result)
                 game_state = self.main_menu()
 
             if isObjective(self.currNode):

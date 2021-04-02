@@ -10,18 +10,19 @@ from utils.utils import *
 
 
 def getStartingNode():
-    # r=randrange(4)
-    r = 4 # 4, 7
+    r=randrange(6)
+    print("Aq: %d " % (r))
+    # r = 6 # 4, 7
     switcher ={
     0:Node(State(copy_list(initialAquarium1), rowCap1, colCap1)),
     1:Node(State(copy_list(initialAquarium2), rowCap2, colCap2)),
     2:Node(State(copy_list(initialAquarium3), rowCap3, colCap3)),
     3:Node(State(copy_list(initialAquarium4), rowCap4, colCap4)),
-    4:Node(State(copy_list(initialAquarium5), rowCap5, colCap5)),
-    5:Node(State(copy_list(initialAquarium6), rowCap6, colCap6)),
-    6:Node(State(copy_list(initialAquarium7), rowCap7, colCap7)),
-    7:Node(State(copy_list(initialAquarium8), rowCap8, colCap8)),
-    8:Node(State(copy_list(initialAquarium9), rowCap9, colCap9)),
+    # 4:Node(State(copy_list(initialAquarium5), rowCap5, colCap5)),
+    # 5:Node(State(copy_list(initialAquarium6), rowCap6, colCap6)),
+    # 6:Node(State(copy_list(initialAquarium7), rowCap7, colCap7)),
+    4:Node(State(copy_list(initialAquarium8), rowCap8, colCap8)),
+    5:Node(State(copy_list(initialAquarium9), rowCap9, colCap9)),
     }
     return switcher.get(0)
 

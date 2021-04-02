@@ -91,11 +91,8 @@ class Node:
                 cells[abs(aquarium[line][col])] = [numCheios, numVazios]
 
             nm = self.numMoves(cells, self.state.rowCap[line], line, linesBellow)
-            # print(cells, self.state.rowCap[line], nm)
             heuristic += nm
             linesBellow.insert(0, dict(cells))
-
-        # print( "---------------")
 
         return heuristic
 
@@ -148,7 +145,6 @@ class Node:
                 cells1 = dict(cells)
                 cells1[aq] = [cells.get(aq)[1], 0]
                 moves = self.possibleAquarium(cells1, line, aq, linesBellow)
-                # print(aq, moves)
                 if moves != -1: 
                     val = moves + 1 + self.numMoves(cells1, cap, line, linesBellow)
                     if val < min: min = val

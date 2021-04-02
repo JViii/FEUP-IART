@@ -39,9 +39,6 @@ def printAquarium(node):
     for i in range(len(aquarium)):
          print("%3d" % (colCap[i]), end = " ")
 
-    # print("\n $$$ Moves: %d" % (node.heuristic))
-
-
     print("\n")
 
 # ---
@@ -117,33 +114,18 @@ def isRepeated(node):
 # Applies all the possible operators to the corresponding state
 def applyOperator(node, notExpanded, nAquariums, alg, allowedDepth = -1):
     aquarium = node.state.aquarium
-    childrenNumber = 0
     
     # Verifies if we reach the max depth
     # Only used for iterative deepening search
-    if node.depth == allowedDepth:
-        return; 
+    if node.depth == allowedDepth: return; 
 
     incRepeatedNodes()
 
-    # cont = 0
-
     for i in range(1,nAquariums+1):
-    #   if not (i in node.impossibleAquariums):
         newNode = Fill(node, i).apply()
         if newNode != -1 and not isRepeated(newNode):
-            # newNode.setChildrenNumber(childrenNumber) # necessary to test if it's repeated
-            # if not isRepeated(newNode):
-                # printAquarium(newNode)
-                # node.addChildren(newNode)
-                # print(alg)
-                if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
-                    # print(cont)
-                    # cont += 1
-                    # printAquarium(newNode)
-                    # print(newNode.heuristic)
-                    notExpanded.push(newNode)
-            # childrenNumber += 1
+            if alg == "blind" or (alg != "blind" and newNode.heuristic < 1000):
+                notExpanded.push(newNode)
 
 # -----------
 
@@ -200,8 +182,6 @@ def bfs(initial_node):
         if isObjective(currNode):
             finalNode = currNode
             break
-        print("&&&&&&&&&&&&&")
-        printAquarium(currNode)
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "blind")
@@ -294,10 +274,9 @@ def its(initial_node):
     
     print("\nSolving using ITS...")
 
-    global repeated_nodes
-    repeated_nodes = []
-
     while True:
+        global repeated_nodes
+        repeated_nodes = []
         while True:
             if isObjective(currNode):
                 finalNode = currNode
@@ -315,7 +294,7 @@ def its(initial_node):
         if finalNode != -1:
             break;
             
-        currNode = Node(State(copy_list(initial_node.state.aquarium), rowCap1, colCap1)) # returns to initial node
+        currNode = Node(State(copy_list(initial_node.state.aquarium), list(initial_node.state.rowCap), list(initial_node.state.colCap))) # returns to initial node
         depth += 1 # increases its depth
     
     return [finalNode,printAlgorithmResults("ITS", start, finalNode)]
@@ -341,8 +320,6 @@ def greedy(initial_node):
             finalNode = currNode
             break
 
-        # printAquarium(currNode)
-
         # apply operator
         applyOperator(currNode, notExpanded,nAquariums, "heuristic")
 
@@ -367,24 +344,14 @@ def aStar(initial_node, human_mode = False):
 
     global repeated_nodes
     repeated_nodes = []
-    # print(repeated_nodes)
-    # repeated_nodes = []
 
     start = time()
     if not human_mode: print("\nSolving using A*...")
-    # num = 0
     while True:
-        # print("Num: %d" % (num))
-        # num += 1
         if isObjective(currNode):
             finalNode = currNode
             break
-        # sleep(1)
-        print("&&&&&&&&&&&&&")
-        # print("&&&&&&&&&&&&&")
-        # print("&&&&&&&&&&&&&")
-        printAquarium(currNode)
-        # print(currNode.impossibleAquariums)
+
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "heuristic")
 
@@ -430,22 +397,22 @@ def getAquarium(maxAquarium):
         
     return int(option)
 
-def numAquariumsFilled(result):
+def numAquariumsFilled(nAquariums, result):
     aquarium = result.state.aquarium
-    ret = [0] * len(aquarium)
+    ret = [0] * nAquariums
     
     for i in range(len(aquarium)):
-        aq = []
+        # aq = []
         for j in range(len(aquarium)):
-            if not (abs(aquarium[i][j]) in aq) and (aquarium[i][j] > 0):
-                aq.append(abs(aquarium[i][j]))
+            if (aquarium[i][j] > 0):
+                # aq.append(abs(aquarium[i][j]))
                 ret[abs(aquarium[i][j]) - 1] += 1
-        aq = []
+        # aq = []
                 
     return ret
 
 def getHint(aquariumsFilled, node):
-    currAquariumsFilled = numAquariumsFilled(node)
+    currAquariumsFilled = numAquariumsFilled(len(aquariumsFilled), node)
     
     # Verifie aquariums to unfill
     for i in range(len(currAquariumsFilled)):
@@ -496,11 +463,11 @@ def humanMode(initial_node):
     currNode = initial_node
     finalNode = -1
     
-    result = aStar(initial_node, True)
-    aquariumsFilled = numAquariumsFilled(result)
-    # print(aquariumsFilled)
-
     nAquariums = max([abs(x) for x in set(sum(initial_node.state.aquarium,[]))]) #Number of aquariums
+    result = aStar(initial_node, True)
+    printAquarium(result)
+    aquariumsFilled = numAquariumsFilled(nAquariums, result)
+    print(aquariumsFilled)
 
     print("\n&&&&&&&&&&&&&&&&&&&&&")
     print("     LET'S PLAY")
@@ -563,8 +530,8 @@ def game():
     mainMenu()
     
 # Starting Node
-#initial_node = getStartingNode()
-#game()
+initial_node = getStartingNode()
+game()
 # print(a.get([[1, 2]]))
 # a = [1]
 # a.insert(0, 2)
