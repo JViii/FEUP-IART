@@ -19,13 +19,13 @@ def getStartingNode():
     2:Node(State(copy_list(initialAquarium3), rowCap3, colCap3)),
     3:Node(State(copy_list(initialAquarium4), rowCap4, colCap4)),
     4:Node(State(copy_list(initialAquarium5), rowCap5, colCap5)),
-    #5:Node(State(copy_list(initialAquarium6), rowCap6, colCap6)),
-    6:Node(State(copy_list(initialAquarium7), rowCap7, colCap7)),
+    5:Node(State(copy_list(initialAquarium7), rowCap7, colCap7)),
+    #6:Node(State(copy_list(initialAquarium6), rowCap6, colCap6)),
     #7:Node(State(copy_list(initialAquarium8), rowCap8, colCap8)),
     #8:Node(State(copy_list(initialAquarium9), rowCap9, colCap9)),
-    9:Node(State(copy_list(initialAquarium10), rowCap10, colCap10)),
+    #9:Node(State(copy_list(initialAquarium10), rowCap10, colCap10)),
     }
-    return switcher.get(6)
+    return switcher.get(r)
 
 #6x6
 # ---

@@ -56,8 +56,8 @@ def printAlgorithmResults(algorithm, initial_time, final_node):
 
     if final_node == -1:
         print("There is no solution to this problem")
-    #else:
-       # printSequenceOfStates(final_node)
+    else:
+        printSequenceOfStates(final_node)
         
     print("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$") 
     print("%s took: %.6f s" % (algorithm, elapsed_time))
@@ -197,9 +197,10 @@ def bfs(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    print("Numero de estados: %f"%count)
+    alg=printAlgorithmResults("BFS", start, finalNode)
+    print("Number of states: %f"%count)
     print("Memory: %f"%maximum)
-    return [finalNode,printAlgorithmResults("BFS", start, finalNode)]
+    return [finalNode,alg ]
         
 # ---    
 # Depth First Search        
@@ -235,9 +236,11 @@ def dfs(initial_node):
             break
         else:
             currNode = notExpanded.pop()
-    print("Numero de estados: %f"%count)
-    print("Memory: %f"%maximum)    
-    return [finalNode,printAlgorithmResults("DFS", start, finalNode)]
+
+    alg=printAlgorithmResults("DFS", start, finalNode)
+    print("Number of states: %f"%count)
+    print("Memory: %f"%maximum)
+    return [finalNode,alg ]
 
 # ---
 # Uniform Cost Search
@@ -272,9 +275,10 @@ def ucs(initial_node):
             break
         else:
             currNode = notExpanded.pop()
-    print("Numero de estados: %f"%count)
+    alg=printAlgorithmResults("UCS", start, finalNode)
+    print("Number of states: %f"%count)
     print("Memory: %f"%maximum)
-    return [finalNode,printAlgorithmResults("UCS", start, finalNode) ]
+    return [finalNode,alg ]
     
 # ---
 # Iterative Deepening Search
@@ -315,9 +319,11 @@ def its(initial_node):
             
         currNode = Node(State(copy_list(initial_node.state.aquarium), list(initial_node.state.rowCap), list(initial_node.state.colCap))) # returns to initial node
         depth += 1 # increases its depth
-    print("Numero de estados: %f"%count)
+
+    alg=printAlgorithmResults("IDS", start, finalNode)
+    print("Number of states: %f"%count)
     print("Memory: %f"%maximum)
-    return [finalNode,printAlgorithmResults("ITS", start, finalNode)]
+    return [finalNode,alg ]
 
 # ---
 # Greedy Search
@@ -353,9 +359,10 @@ def greedy(initial_node):
         else:
             currNode = notExpanded.pop()
     
-    print("Numero de estados: %f"%count)
-    print("Memory: %f"%maximum)    
-    return [finalNode,printAlgorithmResults("Greedy", start, finalNode)]
+    alg=printAlgorithmResults("Greedy", start, finalNode)
+    print("Number of states: %f"%count)
+    print("Memory: %f"%maximum)
+    return [finalNode,alg ]
 
 # ---
 # A* 
@@ -391,9 +398,10 @@ def aStar(initial_node, human_mode = False):
         else:
             currNode = notExpanded.pop()
 
-    print("Numero de estados: %f"%count)
+    alg=printAlgorithmResults("A*", start, finalNode)
+    print("Number of states: %f"%count)
     print("Memory: %f"%maximum)
-    if not human_mode: return [finalNode,printAlgorithmResults("A*", start, finalNode)]   
+    if not human_mode: return [finalNode,alg]   
     else: return finalNode
     
 # $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -562,8 +570,8 @@ def game():
     mainMenu()
     
 # Starting Node
-initial_node = getStartingNode()
-game()
+#initial_node = getStartingNode()
+#game()
 # print(a.get([[1, 2]]))
 # a = [1]
 # a.insert(0, 2)

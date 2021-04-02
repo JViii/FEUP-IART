@@ -5,6 +5,8 @@ from interface.gamestate import ButtonNumber
 from interface.gamestate import GameState
 from interface.uielement import UIElement
 from solve import *
+import time
+
 
 BLUE = (106, 159, 181)
 WHITE = (255, 255, 255)
@@ -305,15 +307,57 @@ class Interface:
 
             pygame.display.flip()
 
+    def loading_screen(self, algorithm):
+        title = UIElement(
+            center_position=(400, 400),
+            font_size=30,
+            bg_rgb=WHITE,
+            text_rgb=BLUE,
+            text="LOADING...",
+        )
+        while True:
+            mouse_up = False
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                    mouse_up = True
+            self.screen.fill(WHITE)
 
-    def play_algorithm(self,algorithm):
-        if algorithm == "bfs": [node, time]=bfs(self.initial_node)
-        elif algorithm == "dfs": [node, time]=dfs(self.initial_node)
-        elif algorithm == "ucs": [node, time]=ucs(self.initial_node)
-        elif algorithm == "its": [node, time]=its(self.initial_node)
-        elif algorithm == "greedy": [node, time]=greedy(self.initial_node)
-        elif algorithm == "aStar": [node, time]=aStar(self.initial_node)
+            title.draw(self.screen)
+           
+            #pygame.draw.rect(self.screen)
 
+
+            pygame.draw.line(self.screen,BLUE,(0,300),(pygame.Surface.get_width(self.screen),300))
+            pygame.draw.line(self.screen,BLUE,(0,500),(pygame.Surface.get_width(self.screen),500))
+
+            pygame.display.flip()
+
+            if algorithm=="human_mode":
+                self.result = aStar(self.initial_node, True)
+                self.nAquariums = max([abs(x) for x in set(sum(self.initial_node.state.aquarium,[]))]) #Number of aquariums
+                self.aquariumsFilled = numAquariumsFilled(self.nAquariums,self.result)
+                return
+            if algorithm == "bfs": 
+                [node, time]=bfs(self.initial_node)
+                break
+            elif algorithm == "dfs": 
+                [node, time]=dfs(self.initial_node)
+                break
+            elif algorithm == "ucs":
+                [node, time]=ucs(self.initial_node)
+                break
+            elif algorithm == "its": 
+                [node, time]=its(self.initial_node)
+                break
+            elif algorithm == "greedy": 
+                [node, time]=greedy(self.initial_node)
+                break
+            elif algorithm == "aStar": 
+                [node, time]=aStar(self.initial_node)
+                break
+        self.play_algorithm(node,time)
+
+    def play_algorithm(self,node, time):
         self.updateNode(node)
 
         time_btn=UIElement(
@@ -329,7 +373,7 @@ class Interface:
             bg_rgb=WHITE,
             text_rgb=BLUE,
             text="Exit",
-            action=GameState.TITLE,
+            action=GameState.QUIT,
         )
 
         title = UIElement(
@@ -459,12 +503,41 @@ class Interface:
 
     def fillAquarium(self,option):
         newNode=FillHuman(self.currNode, option).apply()
-        self.updateNode(newNode)
+        if newNode!=-1:
+            self.updateNode(newNode)
+        else:
+            self.displayAquarium()
+            pygame.draw.rect(self.screen,WHITE, ((0,750),(800,150)))
+            UIElement(
+                center_position=(400, 800),
+                font_size=30,
+                bg_rgb=WHITE,
+                text_rgb=BLUE,
+                text="Invalid Aquarium!",
+            ).draw(self.screen)
+            pygame.display.flip()
+            time.sleep(0.5)
+            self.human_mode()
 
-
+            
     def unfillAquarium(self,option):
         newNode=UnfillHuman(self.currNode, option).apply()
-        self.updateNode(newNode)
+        if newNode!=-1:
+            self.updateNode(newNode)
+        else:
+            self.displayAquarium()
+            pygame.draw.rect(self.screen,WHITE, ((0,750),(800,150)))
+            UIElement(
+                center_position=(400, 800),
+                font_size=30,
+                bg_rgb=WHITE,
+                text_rgb=BLUE,
+                text="Invalid Aquarium!",
+            ).draw(self.screen)
+            pygame.display.flip()
+            time.sleep(0.5)
+            self.human_mode()
+
 
 
     def unfill(self):
@@ -571,15 +644,14 @@ class Interface:
         )
         hint = UIElement(
             center_position=(250,800),
-            font_size=20,
+            font_size=22,
             bg_rgb=WHITE,
             text_rgb=BLUE,
             text="Hint:",
-            action=GameState.HINT,
         )
         hint_btn = UIElement(
             center_position=(300,800),
-            font_size=20,
+            font_size=22,
             bg_rgb=WHITE,
             text_rgb=BLUE,
             text=str(number),
@@ -592,7 +664,7 @@ class Interface:
             text="Return",
             action=GameState.HUMAN_MODE,
         )
-        buttons=[ret,hint]
+        buttons=[ret]
         while True:
             mouse_up = False
             for event in pygame.event.get():
@@ -601,6 +673,7 @@ class Interface:
             self.screen.fill(WHITE)
 
             title.draw(self.screen)
+            hint.draw(self.screen)
             for button in buttons:
                 ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
                 if ui_action is not None:
@@ -666,26 +739,34 @@ class Interface:
         pygame.init()
 
         game_state = GameState.TITLE
-
+        flag=False #to update a node after ending a game
+        human_mode=False
         while True:
             if game_state == GameState.TITLE:
                 self.updateNode(self.initial_node)
-                self.result = aStar(self.initial_node, True)
-                self.nAquariums = max([abs(x) for x in set(sum(self.initial_node.state.aquarium,[]))]) #Number of aquariums
-                self.aquariumsFilled = numAquariumsFilled(self.nAquariums,self.result)
+                flag=True
+                human_mode=False
                 game_state = self.main_menu()
 
-            if isObjective(self.currNode):
-                self.game_over()
-                pygame.quit()
-                return
-
             if game_state == GameState.HUMAN_MODE:
+                if(flag):
+                    self.loading_screen("human_mode")
+                human_mode=True
                 game_state = self.human_mode()
-            
+                flag=False
+
             if game_state == GameState.PC_MODE:
                 game_state = self.pc_mode()
             
+            if game_state == GameState.QUIT:
+                pygame.quit()
+                return
+
+            if isObjective(self.currNode):
+                if human_mode:
+                    self.game_over()
+                pygame.quit()
+                return
             if game_state == GameState.FILL:
                 game_state = self.fill()
 
@@ -694,31 +775,28 @@ class Interface:
             
             if game_state == GameState.HINT:
                 game_state = self.hint()
-
+            
             if game_state == GameState.BFS:
-                game_state = self.play_algorithm("bfs")
+                game_state = self.loading_screen("bfs")
 
             if game_state == GameState.DFS:
-                game_state = self.play_algorithm("dfs")
+                game_state = self.loading_screen("dfs")
             
             if game_state == GameState.UCS:
-                game_state = self.play_algorithm("ucs")
+                game_state = self.loading_screen("ucs")
             
             if game_state == GameState.ITS:
-                game_state = self.play_algorithm("its")
+                game_state = self.loading_screen("its")
 
             if game_state == GameState.GREEDY:
-                game_state = self.play_algorithm("greedy")
+                game_state = self.loading_screen("greedy")
             
             if game_state == GameState.ASTAR:
-                game_state = self.play_algorithm("aStar")
+                game_state = self.loading_screen("aStar")
 
             if game_state == GameState.RETURN:
                 game_state = self.main_menu()
 
-            if game_state == GameState.QUIT:
-                pygame.quit()
-                return
             #UNFILL
             if game_state==ButtonNumber.BM1:
                 self.unfillAquarium(-1)
