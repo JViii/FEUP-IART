@@ -25,7 +25,7 @@ class Interface:
             self.initial_node=initial_node
             self.currNode=initial_node
             self.n= len(initial_node.state.aquarium)
-            self.screen = pygame.display.set_mode((800, 900))
+            self.screen = pygame.display.set_mode((800, 900),pygame.RESIZABLE)
 
     def updateNode(self,node):
         self.currNode=node
