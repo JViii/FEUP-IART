@@ -69,6 +69,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -133,6 +136,9 @@ class Interface:
                       
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -291,6 +297,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -318,6 +327,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -388,6 +400,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -483,6 +498,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -615,6 +633,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -668,6 +689,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -716,6 +740,9 @@ class Interface:
         while True:
             mouse_up = False
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                     mouse_up = True
             self.screen.fill(WHITE)
@@ -742,6 +769,12 @@ class Interface:
         flag=False #to update a node after ending a game
         human_mode=False
         while True:
+            if isObjective(self.currNode):
+                if human_mode:
+                    self.game_over()
+                pygame.quit()
+                return
+
             if game_state == GameState.TITLE:
                 self.updateNode(self.initial_node)
                 flag=True
@@ -757,16 +790,11 @@ class Interface:
 
             if game_state == GameState.PC_MODE:
                 game_state = self.pc_mode()
-            
+
             if game_state == GameState.QUIT:
                 pygame.quit()
                 return
-
-            if isObjective(self.currNode):
-                if human_mode:
-                    self.game_over()
-                pygame.quit()
-                return
+            
             if game_state == GameState.FILL:
                 game_state = self.fill()
 
