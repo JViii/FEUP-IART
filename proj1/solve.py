@@ -198,8 +198,8 @@ def bfs(initial_node):
             currNode = notExpanded.pop()
     
     alg=printAlgorithmResults("BFS", start, finalNode)
-    print("Number of states: %f"%count)
-    print("Memory: %f"%maximum)
+    #print("Number of states: %f"%count)
+    #print("Memory: %f"%maximum)
     return [finalNode,alg ]
         
 # ---    
@@ -238,8 +238,8 @@ def dfs(initial_node):
             currNode = notExpanded.pop()
 
     alg=printAlgorithmResults("DFS", start, finalNode)
-    print("Number of states: %f"%count)
-    print("Memory: %f"%maximum)
+    #print("Number of states: %f"%count)
+    #print("Memory: %f"%maximum)
     return [finalNode,alg ]
 
 # ---
@@ -276,8 +276,8 @@ def ucs(initial_node):
         else:
             currNode = notExpanded.pop()
     alg=printAlgorithmResults("UCS", start, finalNode)
-    print("Number of states: %f"%count)
-    print("Memory: %f"%maximum)
+    #print("Number of states: %f"%count)
+    #print("Memory: %f"%maximum)
     return [finalNode,alg ]
     
 # ---
@@ -321,8 +321,8 @@ def its(initial_node):
         depth += 1 # increases its depth
 
     alg=printAlgorithmResults("IDS", start, finalNode)
-    print("Number of states: %f"%count)
-    print("Memory: %f"%maximum)
+    #print("Number of states: %f"%count)
+    #print("Memory: %f"%maximum)
     return [finalNode,alg ]
 
 # ---
@@ -360,8 +360,8 @@ def greedy(initial_node):
             currNode = notExpanded.pop()
     
     alg=printAlgorithmResults("Greedy", start, finalNode)
-    print("Number of states: %f"%count)
-    print("Memory: %f"%maximum)
+    #print("Number of states: %f"%count)
+    #print("Memory: %f"%maximum)
     return [finalNode,alg ]
 
 # ---
@@ -399,8 +399,8 @@ def aStar(initial_node, human_mode = False):
             currNode = notExpanded.pop()
 
     alg=printAlgorithmResults("A*", start, finalNode)
-    print("Number of states: %f"%count)
-    print("Memory: %f"%maximum)
+    #print("Number of states: %f"%count)
+    #print("Memory: %f"%maximum)
     if not human_mode: return [finalNode,alg]   
     else: return finalNode
     
@@ -570,12 +570,11 @@ def game():
     mainMenu()
     
 # Starting Node
-#initial_node = getStartingNode()
-#game()
-# print(a.get([[1, 2]]))
-# a = [1]
-# a.insert(0, 2)
-# print(a)        
+def text_interface():
+    global initial_node
+    initial_node = getStartingNode()
+    game()
+
 
 
 
