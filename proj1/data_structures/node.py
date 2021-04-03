@@ -136,6 +136,7 @@ class Node:
 
         # já não é possivel chagar a uma solucao
         min = self.selectMinAquariumEmpty(cells)
+        if min == -1: return 0
         if cells.get(min)[1] > (cap - numFill):  return 1000
 
         min = 100000000
