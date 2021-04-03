@@ -188,8 +188,8 @@ def bfs(initial_node):
 
         # apply operator
         applyOperator(currNode, notExpanded, nAquariums, "blind")
-        if(len(notExpanded)>maximum):
-            maximum=len(notExpanded)
+        if(notExpanded.size()>maximum):
+            maximum=notExpanded.size()
         
         # selects next node to process
         if notExpanded.isEmpty(): # no more nodes to expand, no solution found
