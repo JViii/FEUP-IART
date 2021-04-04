@@ -25,7 +25,7 @@ def getStartingNode():
     #8:Node(State(copy_list(initialAquarium9), rowCap9, colCap9)),
     #9:Node(State(copy_list(initialAquarium10), rowCap10, colCap10)),
     }
-    return switcher.get(r)
+    return switcher.get(2)
 
 #6x6
 # ---
